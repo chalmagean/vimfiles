@@ -1,0 +1,30 @@
+snippet ready
+$(document).ready(function() {
+  $0
+});
+endsnippet
+
+snippet module
+var ${1:moduleName} = (function() {
+
+  // Private variables and functions
+  var init = function() {
+		$0
+	};
+
+  // Public API
+  return {
+		init: init
+  };
+})();
+endsnippet
+
+snippet fn
+function() {
+	$0
+};
+endsnippet
+
+snippet cl
+console.log($0);
+endsnippet

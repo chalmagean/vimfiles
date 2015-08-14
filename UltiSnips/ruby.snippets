@@ -1,0 +1,25 @@
+snippet pry
+binding.pry${0}
+endsnippet
+
+snippet be
+before :each do
+	$0
+end
+endsnippet
+
+snippet al
+allow($1).to receive($2).${3:and_return(${4:double.as_null_object})}$0
+endsnippet
+
+snippet ex
+expect($1).to receive($2).${3:and_return(${4:double.as_null_object})}$0
+endsnippet
+
+snippet ano
+as_null_object$0
+endsnippet
+
+snippet aco
+and_call_original$0
+endsnippet

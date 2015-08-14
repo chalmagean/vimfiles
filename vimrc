@@ -1,6 +1,8 @@
 " Leader
 let mapleader = "\<Space>"
 
+set exrc
+set secure
 set backspace=2   " Backspace deletes like most programs in insert mode
 set nobackup
 set nowritebackup
@@ -24,6 +26,15 @@ set ignorecase
 set smartcase
 set foldlevel=10
 set hidden
+
+" Make ESC respond faster
+set timeoutlen=1000
+set ttimeoutlen=0
+
+set nocursorcolumn
+set nocursorline
+set norelativenumber
+syntax sync minlines=256
 
 " Move backup files away from the current folder
 set backupdir=~/tmp
@@ -81,7 +92,7 @@ augroup vimrcEx
   autocmd FileType gitcommit setlocal spell
 
   " Allow css and slim files to autocomplete hyphenated words
-  autocmd FileType css,scss,sass,slim setlocal iskeyword+=-
+  autocmd FileType ruby,css,scss,sass,slim setlocal iskeyword+=-
   autocmd FileType slim setlocal textwidth=120
 augroup END
 
@@ -91,8 +102,29 @@ set shiftwidth=2
 set shiftround
 set expandtab
 
+" Gui MacVim
+set guifont=Inconsolata:h15
+set guioptions-=T " Removes top toolbar
+set guioptions-=r " Removes right hand scroll bar
+set go-=L " Removes left hand scroll bar
+
 " Display extra whitespace
 set list listchars=tab:»·,trail:·,nbsp:·
+
+" set folds, default open
+set foldmethod=indent
+set foldlevel=20
+set foldlevelstart=20
+set showtabline=1
+au BufRead * normal zR
+
+" auto save/load folds
+silent !mkdir -p ~/.vim/tmp/view &>/dev/null
+set viewdir=~/.vim/tmp/view
+augroup vimrc-folds
+  au BufWinEnter * silent! loadview
+  au BufWinLeave * silent! mkview
+augroup END
 
 set grepprg=grep\ -rnH\ --exclude='.*.swp'\ --exclude='*~'\ --exclude=tags
 
@@ -109,8 +141,8 @@ let ruby_no_comment_fold = 1
 let ruby_fold = 1
 let g:sh_fold_enabled=4
 
+set hlsearch
 
-" Numbers
 set number
 set numberwidth=5
 
@@ -119,6 +151,9 @@ let g:Tlist_Ctags_Cmd="ctags --exclude='*.js'"
 
 " Directory list style
 let g:netrw_banner = 0
+let g:netrw_preview = 1
+let g:netrw_liststyle = 3
+let g:netrw_winsize   = 30
 
 " Treat <li> and <p> tags like the block tags they are
 let g:html_indent_tags = 'li\|p'
@@ -151,6 +186,14 @@ autocmd FileType css,scss set iskeyword=@,48-57,_,-,?,!,192-255
 "" Add the '-' as a keyword in erb files
 autocmd FileType eruby set iskeyword=@,48-57,_,192-255,$,-
 
+" Custom mappings
+nmap <leader>j :VimFilerBufferDir<cr>
+nmap <leader>h :set nohlsearch!<cr>
+nmap <leader>a :Ag! 
+nnoremap K :Ag! "\b<C-R><C-W>\b"<cr>
+nmap <C-j> o<Esc>k
+nnoremap # :%s/<C-r><C-w>//n<CR>
+
 " Auto save contents of a buffer when you lose focus
 autocmd BufLeave,FocusLost * silent! update
 
@@ -173,10 +216,12 @@ function! GrepPartial(...)
 endfunction
 command! -nargs=? GrepPartial call GrepPartial(<args>)
 
+color codeschool
 " Set a dark color for the colorcolumn
-highlight ColorColumn ctermbg=234
-highlight SignColumn ctermbg=232
+highlight ColorColumn ctermbg=233 guibg=#272e34
+highlight SignColumn ctermbg=NONE guibg=#2a343a
 
 " Set a dark color for syntastic sign background
-highlight SyntasticErrorSign ctermbg=232 ctermfg=red
-highlight SyntasticWarningSign ctermbg=232 ctermfg=142
+highlight SyntasticErrorSign ctermbg=NONE ctermfg=red guibg=#2a343a guifg=red
+highlight SyntasticWarningSign ctermbg=NONE ctermfg=142 guibg=#2a343a guifg=#ad9909
+
