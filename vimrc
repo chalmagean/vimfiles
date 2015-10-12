@@ -24,8 +24,9 @@ set statusline+=%<%P                         " file position
 set autowrite     " Automatically :write before running commands
 set ignorecase
 set smartcase
-set foldlevel=10
+set foldlevel=99
 set hidden
+set nrformats=hex " Don't increment octals numbers
 
 " Make ESC respond faster
 set timeoutlen=1000
@@ -34,7 +35,6 @@ set ttimeoutlen=0
 set nocursorcolumn
 set nocursorline
 set norelativenumber
-syntax sync minlines=256
 
 " Move backup files away from the current folder
 set backupdir=~/tmp
@@ -90,6 +90,8 @@ augroup vimrcEx
   " Automatically wrap at 72 characters and spell check git commit messages
   autocmd FileType gitcommit setlocal textwidth=72
   autocmd FileType gitcommit setlocal spell
+  " Remove _ from the keywords list so it doesn't autocomplete the branch names
+  autocmd FileType gitcommit setlocal iskeyword=@,48-57,192-255
 
   " Allow css and slim files to autocomplete hyphenated words
   autocmd FileType ruby,css,scss,sass,slim setlocal iskeyword+=-
@@ -113,10 +115,7 @@ set list listchars=tab:»·,trail:·,nbsp:·
 
 " set folds, default open
 set foldmethod=indent
-set foldlevel=20
-set foldlevelstart=20
 set showtabline=1
-au BufRead * normal zR
 
 " auto save/load folds
 silent !mkdir -p ~/.vim/tmp/view &>/dev/null
@@ -187,12 +186,24 @@ autocmd FileType css,scss set iskeyword=@,48-57,_,-,?,!,192-255
 autocmd FileType eruby set iskeyword=@,48-57,_,192-255,$,-
 
 " Custom mappings
-nmap <leader>j :VimFilerBufferDir<cr>
-nmap <leader>h :set nohlsearch!<cr>
-nmap <leader>a :Ag! 
+nnoremap <leader>w :w<cr>
+nnoremap <leader>j :VimFilerBufferDir<cr>
+nnoremap <leader>V :e ~/.vimrc<cr>
+nnoremap <leader>B :e ~/.vim/vimrc.bundles<cr>
+nnoremap <leader>h :set nohlsearch!<cr>
+nnoremap <leader>a :Ag! 
+nnoremap <leader>b :buffers<cr>:b
 nnoremap K :Ag! "\b<C-R><C-W>\b"<cr>
-nmap <C-j> o<Esc>k
+nnoremap <C-j> o<Esc>k
+nnoremap <Tab> ^==<Esc>
+inoremap jj <Esc>
 nnoremap # :%s/<C-r><C-w>//n<CR>
+
+" Resizing windows
+nnoremap <C-up> <C-W>+
+nnoremap <C-down> <C-W>-
+nnoremap <C-left> <C-W><
+nnoremap <C-right> <C-W>>
 
 " Auto save contents of a buffer when you lose focus
 autocmd BufLeave,FocusLost * silent! update

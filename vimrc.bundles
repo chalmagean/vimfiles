@@ -27,68 +27,72 @@ com! -nargs=+  -bar Bundle call VundleToPlug("Bundle", <args>)
 call plug#begin('~/.vim/bundle')
 
 " Define bundles via Github repos
-Plug 'christoomey/vim-run-interactive'
 Plug 'kchmck/vim-coffee-script'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'pbrisbin/vim-mkdir'
-Plug 'scrooloose/syntastic'
+" Plug 'scrooloose/syntastic'
 Plug 'slim-template/vim-slim'
 Plug 'tpope/vim-bundler'
-Plug 'tpope/vim-endwise'
-Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-abolish'
-Plug 'tpope/vim-dispatch'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-unimpaired'
-Plug 'tpope/vim-projectionist'
 Plug 'tpope/vim-rails'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
+Plug 'tpope/gem-browse'
+Plug 'tpope/vim-rake'
+Plug 'tpope/vim-projectionist'
 Plug 'vim-ruby/vim-ruby'
-Plug 'vim-scripts/tComment'
+Plug 'tpope/vim-commentary'
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'rking/ag.vim'
 Plug 'stephpy/vim-yaml'
-Plug 'mattn/webapi-vim'
-Plug 'mattn/gist-vim'
 Plug 'SirVer/ultisnips'
 Plug 'mhinz/vim-grepper'
-Plug 'tpope/vim-projectionist'
 Plug 'Shougo/unite.vim'
 Plug 'Shougo/vimfiler.vim'
-Plug 'unblevable/quick-scope'
 Plug 'mustache/vim-mustache-handlebars'
 Plug 'thoughtbot/vim-rspec'
 Plug 'mattn/emmet-vim'
+Plug 'mxw/vim-jsx'
+Plug 'pangloss/vim-javascript'
 
 if filereadable(expand("~/.vimrc.bundles.local"))
   source ~/.vimrc.bundles.local
 endif
 
+
 call plug#end()
 
-map <leader>n :VimFilerExplorer -winwidth=35<CR>
+map <leader>n :VimFilerExplorer -winwidth=45<CR>
+map <leader>f :VimFilerExplorer -find<CR>
 call vimfiler#custom#profile('default', 'context', {
       \ 'safe' : 0,
       \ })
 let g:vimfiler_as_default_explorer = 1
+" Like Textmate icons.
+let g:vimfiler_tree_leaf_icon = ' '
+let g:vimfiler_tree_opened_icon = '▾'
+let g:vimfiler_tree_closed_icon = '▸'
+let g:vimfiler_file_icon = '-'
+let g:vimfiler_marked_file_icon = '*'
 
 " RSpec.vim mappings
 map <F6> :call RunCurrentSpecFile()<CR>
 map <F5> :call RunNearestSpec()<CR>
 map <S-F5> :call RunLastSpec()<CR>
 
-let g:syntastic_check_on_open = 0
-let g:syntastic_check_on_wq = 0
-let g:syntastic_error_symbol = "➠"
-let g:syntastic_warning_symbol = "⇢"
-let g:syntastic_style_error_symbol = "➠"
-let g:syntastic_style_warning_symbol = "⇢"
-let g:syntastic_stl_format = ' [%E{Err: %fe #%e}%B{, }%W{Warn: %fw #%w}]'
-let g:syntastic_ruby_checkers = ['mri', 'rubocop', 'rubylint']
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
+" let g:syntastic_check_on_open = 0
+" let g:syntastic_check_on_wq = 0
+" let g:syntastic_error_symbol = "➠"
+" let g:syntastic_warning_symbol = "⇢"
+" let g:syntastic_style_error_symbol = "➠"
+" let g:syntastic_style_warning_symbol = "⇢"
+" let g:syntastic_stl_format = ' [%E{Err: %fe #%e}%B{, }%W{Warn: %fw #%w}]'
+" let g:syntastic_ruby_checkers = ['mri', 'rubocop', 'rubylint']
+" set statusline+=%#warningmsg#
+" set statusline+=%{SyntasticStatuslineFlag()}
+" set statusline+=%*
 
 " CtrlP
 let g:ctrlp_custom_ignore = {
@@ -99,13 +103,14 @@ let g:ctrlp_custom_ignore = {
 " The Silver Searcher
 if executable('ag')
   " Use ag over grep
-  set grepprg=ag\ --nogroup\ --nocolor
+  " set grepprg=ag\ --nogroup\ --nocolor
 
   " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
-  let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+  " let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
 
   " ag is fast enough that CtrlP doesn't need to cache
-  let g:ctrlp_use_caching = 0
+  " let g:ctrlp_use_caching = 0
+  let g:ctrlp_use_caching = 1
 endif
 nnoremap <c-b> :CtrlPBuffer<cr>
 
@@ -138,13 +143,3 @@ function! Quick_scope_selective(movement)
     return a:movement . letter
 endfunction
 
-let g:qs_enable = 0
-
-nnoremap <expr> <silent> f Quick_scope_selective('f')
-nnoremap <expr> <silent> F Quick_scope_selective('F')
-nnoremap <expr> <silent> t Quick_scope_selective('t')
-nnoremap <expr> <silent> T Quick_scope_selective('T')
-vnoremap <expr> <silent> f Quick_scope_selective('f')
-vnoremap <expr> <silent> F Quick_scope_selective('F')
-vnoremap <expr> <silent> t Quick_scope_selective('t')
-vnoremap <expr> <silent> T Quick_scope_selective('T')

@@ -21,3 +21,23 @@ Then(/^$1$/) do
 	$0
 end
 endsnippet
+
+snippet sop
+save_and_open_page$0
+endsnippet
+
+snippet exc
+expect(page).to have_content("$1")$0
+endsnippet
+
+snippet con
+context "$1" do
+	$0
+end
+endsnippet
+
+snippet desc
+describe "$1" do
+	$0
+end
+endsnippet
