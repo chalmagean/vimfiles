@@ -28,9 +28,10 @@ call plug#begin('~/.vim/bundle')
 
 " Define bundles via Github repos
 Plug 'kchmck/vim-coffee-script'
+Plug 'NLKNguyen/papercolor-theme'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'pbrisbin/vim-mkdir'
-" Plug 'scrooloose/syntastic'
+Plug 'scrooloose/syntastic'
 Plug 'slim-template/vim-slim'
 Plug 'tpope/vim-bundler'
 Plug 'tpope/vim-abolish'
@@ -44,6 +45,8 @@ Plug 'tpope/vim-rake'
 Plug 'tpope/vim-projectionist'
 Plug 'vim-ruby/vim-ruby'
 Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-endwise'
+Plug 'ecomba/vim-ruby-refactoring'
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'rking/ag.vim'
 Plug 'stephpy/vim-yaml'
@@ -56,6 +59,7 @@ Plug 'thoughtbot/vim-rspec'
 Plug 'mattn/emmet-vim'
 Plug 'mxw/vim-jsx'
 Plug 'pangloss/vim-javascript'
+Plug 'elixir-lang/vim-elixir'
 
 if filereadable(expand("~/.vimrc.bundles.local"))
   source ~/.vimrc.bundles.local
@@ -64,8 +68,8 @@ endif
 
 call plug#end()
 
-map <leader>n :VimFilerExplorer -winwidth=45<CR>
-map <leader>f :VimFilerExplorer -find<CR>
+map <leader>f :VimFilerExplorer -simple -find -winwidth=45 -toggle -no-quit -buffer-name=explorer -split<CR>
+nnoremap <leader>n :VimFiler -buffer-name=explorer -split -simple -winwidth=45 -toggle -no-quit<CR>
 call vimfiler#custom#profile('default', 'context', {
       \ 'safe' : 0,
       \ })
@@ -82,37 +86,45 @@ map <F6> :call RunCurrentSpecFile()<CR>
 map <F5> :call RunNearestSpec()<CR>
 map <S-F5> :call RunLastSpec()<CR>
 
-" let g:syntastic_check_on_open = 0
-" let g:syntastic_check_on_wq = 0
-" let g:syntastic_error_symbol = "➠"
-" let g:syntastic_warning_symbol = "⇢"
-" let g:syntastic_style_error_symbol = "➠"
-" let g:syntastic_style_warning_symbol = "⇢"
-" let g:syntastic_stl_format = ' [%E{Err: %fe #%e}%B{, }%W{Warn: %fw #%w}]'
-" let g:syntastic_ruby_checkers = ['mri', 'rubocop', 'rubylint']
-" set statusline+=%#warningmsg#
-" set statusline+=%{SyntasticStatuslineFlag()}
-" set statusline+=%*
+let g:syntastic_check_on_open = 0
+let g:syntastic_check_on_wq = 1
+let g:syntastic_aggregate_errors = 1
+let g:syntastic_error_symbol = "➠"
+let g:syntastic_warning_symbol = "⇢"
+let g:syntastic_style_error_symbol = "➠"
+let g:syntastic_style_warning_symbol = "⇢"
+let g:syntastic_stl_format = ' [%E{Err: %fe #%e}%B{, }%W{Warn: %fw #%w}]'
+let g:syntastic_ruby_checkers = ['mri', 'rubocop', 'rubylint']
+let g:syntastic_javascript_checkers = ['jsxhint']
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
 
 " CtrlP
+let g:ctrlp_cmd = 'CtrlPMRU'
 let g:ctrlp_custom_ignore = {
   \ 'dir':  '^\.git\|node_modules\|bin\|^\.hg\|\.svn\|build\|log\|resources\|coverage\|doc\|tmp\|public/assets\|vendor\|Android',
-  \ 'file': '\.jpg$\|\.exe$\|\.so$\|tags$\|\.dll$'
+  \ 'file': '\.jpg$\|\.png$\|\.exe$\|\.so$\|tags$\|\.dll$'
   \ }
+let g:ctrlp_switch_buffer = 0
+let g:ctrlp_working_path_mode = 0
+let g:ctrlp_max_files = 0
+let g:ctrlp_mruf_max = 500
+let g:ctrlp_mruf_relative = 1
+let g:ctrlp_buftag_ctags_bin = '/usr/local/bin/ctags'
 
 " The Silver Searcher
 if executable('ag')
   " Use ag over grep
-  " set grepprg=ag\ --nogroup\ --nocolor
+  set grepprg=ag\ --nogroup\ --nocolor
 
   " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
-  " let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+  let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'
 
   " ag is fast enough that CtrlP doesn't need to cache
-  " let g:ctrlp_use_caching = 0
-  let g:ctrlp_use_caching = 1
+  let g:ctrlp_use_caching = 0
+  " let g:ctrlp_use_caching = 1
 endif
-nnoremap <c-b> :CtrlPBuffer<cr>
 
 let g:UltiSnipsDontReverseSearchPath = '1'
 let g:UltiSnipsSnippetDirectories = ['UltiSnips']
@@ -142,4 +154,3 @@ function! Quick_scope_selective(movement)
 
     return a:movement . letter
 endfunction
-

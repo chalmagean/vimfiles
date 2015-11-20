@@ -48,3 +48,23 @@ module.exports = React.createClass({
 	}
 });
 endsnippet
+
+snippet rcc
+window.${1:ClassName} = React.createClass({
+	getInitialState: function() {
+		return {
+		};
+	},
+
+	getDefaultProps: function() {
+		return {
+		};
+	},
+
+	render: function() {
+		return <div>
+			$0
+		</div>;
+	}
+});
+endsnippet

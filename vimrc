@@ -22,7 +22,8 @@ set statusline+=%=                           " right align remainder
 set statusline+=%-14(%l,%c%V%)               " line, character
 set statusline+=%<%P                         " file position
 set autowrite     " Automatically :write before running commands
-set ignorecase
+set noignorecase
+set infercase
 set smartcase
 set foldlevel=99
 set hidden
@@ -32,9 +33,14 @@ set nrformats=hex " Don't increment octals numbers
 set timeoutlen=1000
 set ttimeoutlen=0
 
+set lazyredraw
+set ttyfast
+
 set nocursorcolumn
 set nocursorline
 set norelativenumber
+set nonumber
+set numberwidth=5
 
 " Move backup files away from the current folder
 set backupdir=~/tmp
@@ -49,6 +55,7 @@ endif
 " The "Press ENTER or type command to continue" prompt is jarring and usually unnecessary.
 set shortmess=atI
 
+set t_Co=256
 " Switch syntax highlighting on, when the terminal has colors
 " Also switch on highlighting the last used search pattern.
 if (&t_Co > 2 || has("gui_running")) && !exists("syntax_on")
@@ -76,6 +83,9 @@ augroup BgHighlight
   autocmd WinLeave * set nocul
 augroup END
 
+cnoreabbrev W w
+cnoreabbrev Q q
+
 augroup vimrcEx
   autocmd!
 
@@ -96,6 +106,9 @@ augroup vimrcEx
   " Allow css and slim files to autocomplete hyphenated words
   autocmd FileType ruby,css,scss,sass,slim setlocal iskeyword+=-
   autocmd FileType slim setlocal textwidth=120
+
+  autocmd FileType ruby setlocal colorcolumn=+1
+  autocmd FileType ruby setlocal number
 augroup END
 
 " Softtabs, 2 spaces
@@ -105,7 +118,7 @@ set shiftround
 set expandtab
 
 " Gui MacVim
-set guifont=Inconsolata:h15
+set guifont=Meslo\ LG\ M\ DZ:h13
 set guioptions-=T " Removes top toolbar
 set guioptions-=r " Removes right hand scroll bar
 set go-=L " Removes left hand scroll bar
@@ -114,36 +127,20 @@ set go-=L " Removes left hand scroll bar
 set list listchars=tab:»·,trail:·,nbsp:·
 
 " set folds, default open
-set foldmethod=indent
+set foldmethod=manual
 set showtabline=1
 
-" auto save/load folds
-silent !mkdir -p ~/.vim/tmp/view &>/dev/null
-set viewdir=~/.vim/tmp/view
-augroup vimrc-folds
-  au BufWinEnter * silent! loadview
-  au BufWinLeave * silent! mkview
-augroup END
-
-set grepprg=grep\ -rnH\ --exclude='.*.swp'\ --exclude='*~'\ --exclude=tags
+" set grepprg=grep\ -rnH\ --exclude='.*.swp'\ --exclude='*~'\ --exclude=tags
 
 " Make it obvious where 80 characters is
 set textwidth=80
-autocmd FileType ruby setlocal colorcolumn=+1
 
 " ruby path if you are using RVM
 let g:ruby_path = system('rvm current')
 " Intent private methods
 let g:ruby_indent_access_modifier_style = 'outdent'
-" Folding in ruby
-let ruby_no_comment_fold = 1
-let ruby_fold = 1
-let g:sh_fold_enabled=4
 
 set hlsearch
-
-set number
-set numberwidth=5
 
 " Exclude Javascript files in :Rtags via rails.vim due to warnings when parsing
 let g:Tlist_Ctags_Cmd="ctags --exclude='*.js'"
@@ -168,8 +165,7 @@ set spellfile=$HOME/.vim-spell-en.utf-8.add
 " Use UTF-8 without BOM
 set encoding=utf-8 nobomb
 
-" Autocomplete with dictionary words when spell check is on
-set complete+=kspell
+set complete=.,w,b
 
 " Always use vertical diffs
 set diffopt+=vertical
@@ -184,19 +180,21 @@ set nostartofline
 autocmd FileType css,scss set iskeyword=@,48-57,_,-,?,!,192-255
 "" Add the '-' as a keyword in erb files
 autocmd FileType eruby set iskeyword=@,48-57,_,192-255,$,-
+" Disable cursorline in ruby files. It makes scrolling much faster.
+au BufNewFile,BufRead,BufEnter *.rb set nocursorline
 
 " Custom mappings
 nnoremap <leader>w :w<cr>
 nnoremap <leader>j :VimFilerBufferDir<cr>
 nnoremap <leader>V :e ~/.vimrc<cr>
 nnoremap <leader>B :e ~/.vim/vimrc.bundles<cr>
-nnoremap <leader>h :set nohlsearch!<cr>
+nnoremap <leader>h :noh<cr>
 nnoremap <leader>a :Ag! 
 nnoremap <leader>b :buffers<cr>:b
 nnoremap K :Ag! "\b<C-R><C-W>\b"<cr>
 nnoremap <C-j> o<Esc>k
 nnoremap <Tab> ^==<Esc>
-inoremap jj <Esc>
+inoremap kj <Esc>
 nnoremap # :%s/<C-r><C-w>//n<CR>
 
 " Resizing windows
@@ -227,12 +225,35 @@ function! GrepPartial(...)
 endfunction
 command! -nargs=? GrepPartial call GrepPartial(<args>)
 
-color codeschool
+color PaperColor
 " Set a dark color for the colorcolumn
-highlight ColorColumn ctermbg=233 guibg=#272e34
-highlight SignColumn ctermbg=NONE guibg=#2a343a
+" highlight ColorColumn ctermbg=233 guibg=#272e34
+" highlight SignColumn ctermbg=NONE guibg=#2a343a
 
 " Set a dark color for syntastic sign background
-highlight SyntasticErrorSign ctermbg=NONE ctermfg=red guibg=#2a343a guifg=red
-highlight SyntasticWarningSign ctermbg=NONE ctermfg=142 guibg=#2a343a guifg=#ad9909
+" highlight SyntasticErrorSign ctermbg=NONE ctermfg=red guibg=#2a343a guifg=red
+" highlight SyntasticWarningSign ctermbg=NONE ctermfg=142 guibg=#2a343a guifg=#ad9909
 
+function! s:JsBeautify() range
+  let type = (&filetype ==# 'javascript') ? 'js' : &filetype
+
+  let cmd = [
+        \ '!js-beautify',
+        \ '--file -',
+        \ '--type ' . type
+        \ ]
+
+  if &expandtab
+    let cmd = add(cmd, '--indent-size ' . shiftwidth())
+  else
+    let cmd = add(cmd, '--indent-with-tabs')
+  endif
+
+  execute a:firstline . ',' . a:lastline . join(cmd)
+endfunction
+
+augroup jsbeautify
+  autocmd!
+  autocmd FileType html,css,javascript,json
+        \ command! -bar -nargs=0 -buffer -range=% JsBeautify <line1>,<line2>call s:JsBeautify()
+augroup END
