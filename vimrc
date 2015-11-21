@@ -49,7 +49,9 @@ set dir=~/tmp
 
 if exists('+undofile')
   set undofile
-  set undodir=~/tmp
+  set undodir=~/.vim/undodir
+  set undolevels=1000 " maximum number of changes that can be undone
+  set undoreload=10000 " maximum number lines to save for undo on a buffer reload
 endif
 
 " The "Press ENTER or type command to continue" prompt is jarring and usually unnecessary.
@@ -184,15 +186,11 @@ autocmd FileType eruby set iskeyword=@,48-57,_,192-255,$,-
 au BufNewFile,BufRead,BufEnter *.rb set nocursorline
 
 " Custom mappings
-nnoremap <leader>w :w<cr>
 nnoremap <leader>j :VimFilerBufferDir<cr>
-nnoremap <leader>V :e ~/.vimrc<cr>
-nnoremap <leader>B :e ~/.vim/vimrc.bundles<cr>
-nnoremap <leader>h :noh<cr>
+nnoremap <leader>v :e ~/.vimrc<cr>
+nnoremap <leader>V :e ~/.vim/vimrc.bundles<cr>
 nnoremap <leader>a :Ag! 
-nnoremap <leader>b :buffers<cr>:b
 nnoremap K :Ag! "\b<C-R><C-W>\b"<cr>
-nnoremap <C-j> o<Esc>k
 nnoremap <Tab> ^==<Esc>
 inoremap kj <Esc>
 nnoremap # :%s/<C-r><C-w>//n<CR>

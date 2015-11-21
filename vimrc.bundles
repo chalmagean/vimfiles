@@ -60,6 +60,7 @@ Plug 'mattn/emmet-vim'
 Plug 'mxw/vim-jsx'
 Plug 'pangloss/vim-javascript'
 Plug 'elixir-lang/vim-elixir'
+Plug 'vim-scripts/bufexplorer.zip'
 
 if filereadable(expand("~/.vimrc.bundles.local"))
   source ~/.vimrc.bundles.local
@@ -85,6 +86,13 @@ let g:vimfiler_marked_file_icon = '*'
 map <F6> :call RunCurrentSpecFile()<CR>
 map <F5> :call RunNearestSpec()<CR>
 map <S-F5> :call RunLastSpec()<CR>
+nnoremap <leader>b :CtrlPBuffer<cr>
+nnoremap <leader>B :BufExplorer<cr>
+
+let g:bufExplorerDefaultHelp=0
+let g:bufExplorerDisableDefaultKeyMapping=1
+let g:bufExplorerShowRelativePath=1
+let g:bufExplorerShowDirectories=0
 
 let g:syntastic_check_on_open = 0
 let g:syntastic_check_on_wq = 1
@@ -101,7 +109,6 @@ set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
 
 " CtrlP
-let g:ctrlp_cmd = 'CtrlPMRU'
 let g:ctrlp_custom_ignore = {
   \ 'dir':  '^\.git\|node_modules\|bin\|^\.hg\|\.svn\|build\|log\|resources\|coverage\|doc\|tmp\|public/assets\|vendor\|Android',
   \ 'file': '\.jpg$\|\.png$\|\.exe$\|\.so$\|tags$\|\.dll$'
@@ -112,6 +119,7 @@ let g:ctrlp_max_files = 0
 let g:ctrlp_mruf_max = 500
 let g:ctrlp_mruf_relative = 1
 let g:ctrlp_buftag_ctags_bin = '/usr/local/bin/ctags'
+let g:ctrlp_match_window = 'bottom,order:btt,min:1,max:20'
 
 " The Silver Searcher
 if executable('ag')
