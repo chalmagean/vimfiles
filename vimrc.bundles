@@ -2,36 +2,12 @@ if &compatible
   set nocompatible
 end
 
-" Shim command and function to allow migration from Vundle to vim-plug.
-function! VundleToPlug(vundle_command, arg, ...)
-  echom "You are using Vundle's `".a:vundle_command."` command to declare plugins. Dotfiles now uses vim-plug for plugin mangagement. Please rename uses of `".a:vundle_command."` to `Plug`. Plugin was '".a:arg."'."
-  let vim_plug_options = {}
-
-  if a:0 > 0
-    if has_key(a:1, 'name')
-      let name = a:1.name
-      let vim_plug_options.dir = "$HOME/.vim/bundle/".a:1.name
-    endif
-
-    if has_key(a:1, 'rtp')
-      let vim_plug_options.rtp = a:1.rtp
-    endif
-  endif
-
-  Plug a:arg, vim_plug_options
-endfunction
-
-com! -nargs=+  -bar Plugin call VundleToPlug("Plugin", <args>)
-com! -nargs=+  -bar Bundle call VundleToPlug("Bundle", <args>)
-
 call plug#begin('~/.vim/bundle')
 
 " Define bundles via Github repos
 Plug 'kchmck/vim-coffee-script'
-Plug 'NLKNguyen/papercolor-theme'
-Plug 'ctrlpvim/ctrlp.vim'
+" Plug 'NLKNguyen/papercolor-theme'
 Plug 'pbrisbin/vim-mkdir'
-Plug 'scrooloose/syntastic'
 Plug 'slim-template/vim-slim'
 Plug 'tpope/vim-bundler'
 Plug 'tpope/vim-abolish'
@@ -41,7 +17,10 @@ Plug 'tpope/vim-rails'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
 Plug 'tpope/gem-browse'
+Plug 'tpope/vim-eunuch'
+Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 Plug 'tpope/vim-rake'
+Plug 'morhetz/gruvbox'
 Plug 'tpope/vim-projectionist'
 Plug 'vim-ruby/vim-ruby'
 Plug 'tpope/vim-commentary'
@@ -52,87 +31,42 @@ Plug 'rking/ag.vim'
 Plug 'stephpy/vim-yaml'
 Plug 'SirVer/ultisnips'
 Plug 'mhinz/vim-grepper'
-Plug 'Shougo/unite.vim'
-Plug 'Shougo/vimfiler.vim'
 Plug 'mustache/vim-mustache-handlebars'
-Plug 'thoughtbot/vim-rspec'
 Plug 'mattn/emmet-vim'
 Plug 'mxw/vim-jsx'
 Plug 'pangloss/vim-javascript'
 Plug 'elixir-lang/vim-elixir'
 Plug 'vim-scripts/bufexplorer.zip'
+Plug 'ledger/vim-ledger'
+Plug 'kurko/smartest.vim'
+Plug 'crusoexia/vim-monokai'
+Plug 'benekastah/neomake'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
 
 if filereadable(expand("~/.vimrc.bundles.local"))
   source ~/.vimrc.bundles.local
 endif
 
-
 call plug#end()
 
-map <leader>f :VimFilerExplorer -simple -find -winwidth=45 -toggle -no-quit -buffer-name=explorer -split<CR>
-nnoremap <leader>n :VimFiler -buffer-name=explorer -split -simple -winwidth=45 -toggle -no-quit<CR>
-call vimfiler#custom#profile('default', 'context', {
-      \ 'safe' : 0,
-      \ })
-let g:vimfiler_as_default_explorer = 1
-" Like Textmate icons.
-let g:vimfiler_tree_leaf_icon = ' '
-let g:vimfiler_tree_opened_icon = '▾'
-let g:vimfiler_tree_closed_icon = '▸'
-let g:vimfiler_file_icon = '-'
-let g:vimfiler_marked_file_icon = '*'
+nnoremap <leader>t :call RunTestFile()<cr>
+nnoremap <leader>r :call RunNearestTest()<cr>
 
-" RSpec.vim mappings
-map <F6> :call RunCurrentSpecFile()<CR>
-map <F5> :call RunNearestSpec()<CR>
-map <S-F5> :call RunLastSpec()<CR>
 nnoremap <leader>b :CtrlPBuffer<cr>
 nnoremap <leader>B :BufExplorer<cr>
+
+let g:neomake_ruby_rubocop_maker = { 'args': ['-c.rubocop.yml', '-n'], 'cwd': getcwd() }
+let g:neomake_ruby_enabled_makers = ['mri', 'rubocop']
+
+let g:ledger_extra_options = '--pedantic --explicit --check-payees'
+let g:ledger_default_commodity = 'RON'
+au FileType ledger inoremap <silent><buffer> <C-l><Esc>:call ledger#align_amount_at_cursor()<CR>
 
 let g:bufExplorerDefaultHelp=0
 let g:bufExplorerDisableDefaultKeyMapping=1
 let g:bufExplorerShowRelativePath=1
 let g:bufExplorerShowDirectories=0
-
-let g:syntastic_check_on_open = 0
-let g:syntastic_check_on_wq = 1
-let g:syntastic_aggregate_errors = 1
-let g:syntastic_error_symbol = "➠"
-let g:syntastic_warning_symbol = "⇢"
-let g:syntastic_style_error_symbol = "➠"
-let g:syntastic_style_warning_symbol = "⇢"
-let g:syntastic_stl_format = ' [%E{Err: %fe #%e}%B{, }%W{Warn: %fw #%w}]'
-let g:syntastic_ruby_checkers = ['mri', 'rubocop', 'rubylint']
-let g:syntastic_javascript_checkers = ['jsxhint']
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-
-" CtrlP
-let g:ctrlp_custom_ignore = {
-  \ 'dir':  '^\.git\|node_modules\|bin\|^\.hg\|\.svn\|build\|log\|resources\|coverage\|doc\|tmp\|public/assets\|vendor\|Android',
-  \ 'file': '\.jpg$\|\.png$\|\.exe$\|\.so$\|tags$\|\.dll$'
-  \ }
-let g:ctrlp_switch_buffer = 0
-let g:ctrlp_working_path_mode = 0
-let g:ctrlp_max_files = 0
-let g:ctrlp_mruf_max = 500
-let g:ctrlp_mruf_relative = 1
-let g:ctrlp_buftag_ctags_bin = '/usr/local/bin/ctags'
-let g:ctrlp_match_window = 'bottom,order:btt,min:1,max:20'
-
-" The Silver Searcher
-if executable('ag')
-  " Use ag over grep
-  set grepprg=ag\ --nogroup\ --nocolor
-
-  " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
-  let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'
-
-  " ag is fast enough that CtrlP doesn't need to cache
-  let g:ctrlp_use_caching = 0
-  " let g:ctrlp_use_caching = 1
-endif
 
 let g:UltiSnipsDontReverseSearchPath = '1'
 let g:UltiSnipsSnippetDirectories = ['UltiSnips']
@@ -141,7 +75,6 @@ let g:UltiSnipsListSnippets = '<c-l>'
 let g:UltiSnipsExpandTrigger = '<tab>'
 let g:UltiSnipsJumpForwardTrigger = '<tab>'
 let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
-
 
 let g:grepper = { 'programs': ['ag'] }
 
@@ -162,3 +95,9 @@ function! Quick_scope_selective(movement)
 
     return a:movement . letter
 endfunction
+
+map <leader>n :NERDTreeToggle<CR>
+map <leader>j :NERDTreeFind<CR>
+
+" Load a color theme
+colorscheme monokai

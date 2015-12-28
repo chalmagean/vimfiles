@@ -33,13 +33,16 @@ set nrformats=hex " Don't increment octals numbers
 set timeoutlen=1000
 set ttimeoutlen=0
 
+set wildignorecase
+set wildmode=list:full
+
 set lazyredraw
 set ttyfast
 
 set nocursorcolumn
 set nocursorline
 set norelativenumber
-set nonumber
+set number
 set numberwidth=5
 
 " Move backup files away from the current folder
@@ -75,9 +78,6 @@ endif
 
 filetype plugin indent on
 
-" Load a color theme
-set background=dark
-
 " Highlight current line on the active window only
 augroup BgHighlight
   autocmd!
@@ -85,8 +85,14 @@ augroup BgHighlight
   autocmd WinLeave * set nocul
 augroup END
 
+" Check buffer with Neomake on save
+autocmd! BufWritePost * Neomake
+
 cnoreabbrev W w
 cnoreabbrev Q q
+
+"open def in new tab
+map <C-\> :tab split<CR>:exec("tag ".expand("<cword>"))<CR>
 
 augroup vimrcEx
   autocmd!
@@ -113,11 +119,33 @@ augroup vimrcEx
   autocmd FileType ruby setlocal number
 augroup END
 
+augroup VIMRC
+  autocmd!
+
+  " autocmd BufLeave *.css normal! mS
+  " autocmd BufLeave *.scss normal! mS
+  " autocmd BufLeave *.sass normal! mS
+
+  autocmd BufLeave *.html normal! mH
+  autocmd BufLeave *.erb normal! mH
+  autocmd BufLeave *.slim normal! mH
+
+  autocmd BufLeave *.js normal! mJ
+  autocmd BufLeave *.coffee normal! mJ
+
+  autocmd BufLeave *_controller.rb normal! mC
+  autocmd BufLeave models/*.rb normal! mM
+  autocmd BufLeave views/**/*.rb normal! mV
+  autocmd BufLeave *_spec.rb normal! mS
+augroup END
+
 " Softtabs, 2 spaces
 set tabstop=2
 set shiftwidth=2
 set shiftround
 set expandtab
+
+set scrolloff=3 " Keep 3 lines below and above the cursor
 
 " Gui MacVim
 set guifont=Meslo\ LG\ M\ DZ:h13
@@ -186,11 +214,10 @@ autocmd FileType eruby set iskeyword=@,48-57,_,192-255,$,-
 au BufNewFile,BufRead,BufEnter *.rb set nocursorline
 
 " Custom mappings
-nnoremap <leader>j :VimFilerBufferDir<cr>
 nnoremap <leader>v :e ~/.vimrc<cr>
 nnoremap <leader>V :e ~/.vim/vimrc.bundles<cr>
-nnoremap <leader>a :Ag! 
-nnoremap K :Ag! "\b<C-R><C-W>\b"<cr>
+nnoremap <leader>a :Ag 
+nnoremap K :Ag "\b<C-R><C-W>\b"<cr>
 nnoremap <Tab> ^==<Esc>
 inoremap kj <Esc>
 nnoremap # :%s/<C-r><C-w>//n<CR>
@@ -223,35 +250,10 @@ function! GrepPartial(...)
 endfunction
 command! -nargs=? GrepPartial call GrepPartial(<args>)
 
-color PaperColor
 " Set a dark color for the colorcolumn
 " highlight ColorColumn ctermbg=233 guibg=#272e34
 " highlight SignColumn ctermbg=NONE guibg=#2a343a
 
 " Set a dark color for syntastic sign background
-" highlight SyntasticErrorSign ctermbg=NONE ctermfg=red guibg=#2a343a guifg=red
-" highlight SyntasticWarningSign ctermbg=NONE ctermfg=142 guibg=#2a343a guifg=#ad9909
-
-function! s:JsBeautify() range
-  let type = (&filetype ==# 'javascript') ? 'js' : &filetype
-
-  let cmd = [
-        \ '!js-beautify',
-        \ '--file -',
-        \ '--type ' . type
-        \ ]
-
-  if &expandtab
-    let cmd = add(cmd, '--indent-size ' . shiftwidth())
-  else
-    let cmd = add(cmd, '--indent-with-tabs')
-  endif
-
-  execute a:firstline . ',' . a:lastline . join(cmd)
-endfunction
-
-augroup jsbeautify
-  autocmd!
-  autocmd FileType html,css,javascript,json
-        \ command! -bar -nargs=0 -buffer -range=% JsBeautify <line1>,<line2>call s:JsBeautify()
-augroup END
+highlight SyntasticErrorSign ctermbg=NONE ctermfg=red guibg=#2a343a guifg=red
+highlight SyntasticWarningSign ctermbg=NONE ctermfg=142 guibg=#2a343a guifg=#ad9909
