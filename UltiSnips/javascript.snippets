@@ -19,10 +19,16 @@ var ${1:moduleName} = (function() {
 })();
 endsnippet
 
-snippet fn
-function() {
+snippet fn "function"
+function$1() {
 	$0
-};
+}
+endsnippet
+
+snippet efn "export function"
+export function ${1:name}($2) {
+	$0
+}
 endsnippet
 
 snippet cl
@@ -67,4 +73,22 @@ window.${1:ClassName} = React.createClass({
 		</div>;
 	}
 });
+endsnippet
+
+snippet des "describe" m
+describe("$1", () => {
+
+	$0
+
+});
+endsnippet
+
+snippet it
+it("$1", () => {
+	$0
+});
+endsnippet
+
+snippet exp "expect"
+expect($1).to.equal($0)
 endsnippet

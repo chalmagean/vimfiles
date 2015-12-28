@@ -31,13 +31,13 @@ expect(page).to have_content("$1")$0
 endsnippet
 
 snippet con
-context "$1" do
+context '$1' do
 	$0
 end
 endsnippet
 
 snippet desc
-describe "$1" do
+describe '$1' do
 	$0
 end
 endsnippet
@@ -48,4 +48,22 @@ endsnippet
 
 snippet ld
 let(:$1) { double("$1") }
+endsnippet
+
+snippet ac
+add_column :${1:table_name}, :${2:column_name}, :${3:column_type}$0
+endsnippet
+
+snippet rt
+render_template('$1')
+endsnippet
+
+snippet rc
+rename_column :${1:table_name}, :${2:old_column_name}, :${3:new_column_name}$0
+endsnippet
+
+snippet dp
+puts "------------------------\n\n"
+puts $0.inspect
+puts "------------------------\n\n"
 endsnippet
