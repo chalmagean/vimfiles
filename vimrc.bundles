@@ -27,7 +27,6 @@ Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-endwise'
 Plug 'ecomba/vim-ruby-refactoring'
 Plug 'AndrewRadev/splitjoin.vim'
-Plug 'rking/ag.vim'
 Plug 'stephpy/vim-yaml'
 Plug 'SirVer/ultisnips'
 Plug 'mhinz/vim-grepper'
@@ -43,6 +42,7 @@ Plug 'crusoexia/vim-monokai'
 Plug 'benekastah/neomake'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
+Plug 'othree/csscomplete.vim'
 
 if filereadable(expand("~/.vimrc.bundles.local"))
   source ~/.vimrc.bundles.local
@@ -50,18 +50,37 @@ endif
 
 call plug#end()
 
-nnoremap <leader>t :call RunTestFile()<cr>
-nnoremap <leader>r :call RunNearestTest()<cr>
+nnoremap <leader>f :FZF<cr>
+nnoremap <leader>b :Buffers<cr>
+nnoremap <leader>B :BufExplorerHorizontalSplit<CR>
 
-nnoremap <leader>b :CtrlPBuffer<cr>
-nnoremap <leader>B :BufExplorer<cr>
+" let g:agprg="/usr/local/bin/ag --column"
+" Always start searching from your project root instead of the cwd
+" let g:ag_working_path_mode="r"
+
+" Update the bult-in CSS complete function to latest CSS standard
+autocmd FileType css set omnifunc=csscomplete#CompleteCSS noci
 
 let g:neomake_ruby_rubocop_maker = { 'args': ['-c.rubocop.yml', '-n'], 'cwd': getcwd() }
 let g:neomake_ruby_enabled_makers = ['mri', 'rubocop']
 
+let g:neomake_warning_sign = {
+      \ 'text': '•',
+      \ 'texthl': 'WarningMsg',
+      \ }
+
+let g:neomake_error_sign = {
+      \ 'text': '‣',
+      \ 'texthl': 'ErrorMsg',
+      \ }
+
 let g:ledger_extra_options = '--pedantic --explicit --check-payees'
 let g:ledger_default_commodity = 'RON'
-au FileType ledger inoremap <silent><buffer> <C-l><Esc>:call ledger#align_amount_at_cursor()<CR>
+let g:ledger_maxwidth = 80
+let g:ledger_align_at = 50
+let g:ledger_decimal_sep = ','
+let g:ledger_commodity_before = 0
+let g:ledger_commodity_sep = ' '
 
 let g:bufExplorerDefaultHelp=0
 let g:bufExplorerDisableDefaultKeyMapping=1

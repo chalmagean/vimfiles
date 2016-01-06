@@ -8,6 +8,7 @@ set nobackup
 set nowritebackup
 set noswapfile    " http://robots.thoughtbot.com/post/18739402579/global-gitignore#comment-458413287
 set history=50
+set mouse=a       " enable the use of the mouse
 set ruler         " show the cursor position all the time
 set showcmd       " display incomplete commands
 set incsearch     " do incremental searching
@@ -216,7 +217,7 @@ au BufNewFile,BufRead,BufEnter *.rb set nocursorline
 " Custom mappings
 nnoremap <leader>v :e ~/.vimrc<cr>
 nnoremap <leader>V :e ~/.vim/vimrc.bundles<cr>
-nnoremap <leader>a :Ag 
+nnoremap <leader>a :Ag<cr>
 nnoremap K :Ag "\b<C-R><C-W>\b"<cr>
 nnoremap <Tab> ^==<Esc>
 inoremap kj <Esc>
