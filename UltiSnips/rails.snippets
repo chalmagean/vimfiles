@@ -42,11 +42,15 @@ describe '$1' do
 end
 endsnippet
 
-snippet lc
+snippet let
+let(:$1) { $0 }
+endsnippet
+
+snippet letc
 let(:$1) { create(:$1) }
 endsnippet
 
-snippet ld
+snippet letd
 let(:$1) { double("$1") }
 endsnippet
 
@@ -67,3 +71,8 @@ puts "------------------------\n\n"
 puts $0.inspect
 puts "------------------------\n\n"
 endsnippet
+
+snippet exre "expect(response).to eq()"
+expect(${1:response}).to eq($0)
+endsnippet
+

@@ -6,7 +6,7 @@ call plug#begin('~/.vim/bundle')
 
 " Define bundles via Github repos
 Plug 'kchmck/vim-coffee-script'
-" Plug 'NLKNguyen/papercolor-theme'
+Plug 'NLKNguyen/papercolor-theme'
 Plug 'pbrisbin/vim-mkdir'
 Plug 'slim-template/vim-slim'
 Plug 'tpope/vim-bundler'
@@ -18,7 +18,7 @@ Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
 Plug 'tpope/gem-browse'
 Plug 'tpope/vim-eunuch'
-Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
+Plug 'scrooloose/nerdtree'
 Plug 'tpope/vim-rake'
 Plug 'morhetz/gruvbox'
 Plug 'tpope/vim-projectionist'
@@ -33,16 +33,28 @@ Plug 'mhinz/vim-grepper'
 Plug 'mustache/vim-mustache-handlebars'
 Plug 'mattn/emmet-vim'
 Plug 'mxw/vim-jsx'
+Plug 'elzr/vim-json'
+Plug 'othree/es.next.syntax.vim'
+Plug 'othree/jsdoc-syntax.vim'
+Plug 'othree/javascript-libraries-syntax.vim'
 Plug 'pangloss/vim-javascript'
 Plug 'elixir-lang/vim-elixir'
 Plug 'vim-scripts/bufexplorer.zip'
 Plug 'ledger/vim-ledger'
 Plug 'kurko/smartest.vim'
 Plug 'crusoexia/vim-monokai'
-Plug 'benekastah/neomake'
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-Plug 'junegunn/fzf.vim'
+Plug 'scrooloose/syntastic'
 Plug 'othree/csscomplete.vim'
+Plug 'kien/ctrlp.vim'
+Plug 'othree/yajs.vim', { 'for': 'javascript' }
+Plug 'gavocanov/vim-js-indent'
+Plug 'marijnh/tern_for_vim', { 'do': 'npm install' }
+Plug 'othree/jspc.vim'
+Plug 'ramitos/jsctags'
+Plug 'rking/ag.vim'
+Plug 'vim-airline/vim-airline'
+Plug 'w0ng/vim-hybrid'
+Plug 'junegunn/gv.vim'
 
 if filereadable(expand("~/.vimrc.bundles.local"))
   source ~/.vimrc.bundles.local
@@ -50,29 +62,60 @@ endif
 
 call plug#end()
 
-nnoremap <leader>f :FZF<cr>
-nnoremap <leader>b :Buffers<cr>
-nnoremap <leader>B :BufExplorerHorizontalSplit<CR>
+nnoremap <leader>b :BufExplorerHorizontalSplit<CR>
 
-" let g:agprg="/usr/local/bin/ag --column"
+" CtrlP
+let g:ctrlp_custom_ignore = {
+  \ 'dir':  '^\.git\|node_modules\|bin\|^\.hg\|\.svn\|build\|log\|resources\|coverage\|doc\|tmp\|public/assets\|vendor\|Android',
+  \ 'file': '\.jpg$\|\.png$\|\.exe$\|\.so$\|tags$\|\.dll$'
+  \ }
+let g:ctrlp_switch_buffer = 0
+let g:ctrlp_working_path_mode = 0
+let g:ctrlp_max_files = 0
+let g:ctrlp_mruf_max = 500
+let g:ctrlp_mruf_relative = 1
+let g:ctrlp_buftag_ctags_bin = '/usr/local/bin/ctags'
+let g:ctrlp_match_window = 'bottom,order:btt,min:1,max:20'
+
+let g:vim_json_syntax_conceal = 0
+" The Silver Searcher
+if executable('ag')
+  " Use ag over grep
+  set grepprg=ag\ --nogroup\ --nocolor
+
+  " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
+  let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'
+
+  " ag is fast enough that CtrlP doesn't need to cache
+  let g:ctrlp_use_caching = 0
+  " let g:ctrlp_use_caching = 1
+endif
+
+let g:airline_left_sep=''
+let g:airline_right_sep=''
+let g:airline_extensions = []
+
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 1
+let g:syntastic_aggregate_errors = 1
+let g:syntastic_error_symbol = "»"
+let g:syntastic_warning_symbol = "•"
+let g:syntastic_style_error_symbol = "»"
+let g:syntastic_style_warning_symbol = "•"
+let g:syntastic_stl_format = ' [%E{Err: %fe #%e}%B{, }%W{Warn: %fw #%w}]'
+let g:syntastic_ruby_checkers = ['mri', 'rubocop', 'rubylint']
+let g:syntastic_javascript_checkers = ['eslint']
+let g:syntastic_always_populate_loc_list = 1
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:ag_prg="/usr/local/bin/ag --column"
 " Always start searching from your project root instead of the cwd
-" let g:ag_working_path_mode="r"
+let g:ag_working_path_mode="r"
 
 " Update the bult-in CSS complete function to latest CSS standard
 autocmd FileType css set omnifunc=csscomplete#CompleteCSS noci
-
-let g:neomake_ruby_rubocop_maker = { 'args': ['-c.rubocop.yml', '-n'], 'cwd': getcwd() }
-let g:neomake_ruby_enabled_makers = ['mri', 'rubocop']
-
-let g:neomake_warning_sign = {
-      \ 'text': '•',
-      \ 'texthl': 'WarningMsg',
-      \ }
-
-let g:neomake_error_sign = {
-      \ 'text': '‣',
-      \ 'texthl': 'ErrorMsg',
-      \ }
 
 let g:ledger_extra_options = '--pedantic --explicit --check-payees'
 let g:ledger_default_commodity = 'RON'
@@ -119,4 +162,18 @@ map <leader>n :NERDTreeToggle<CR>
 map <leader>j :NERDTreeFind<CR>
 
 " Load a color theme
-colorscheme monokai
+set background=dark
+colorscheme hybrid
+
+" Change cursor shape between insert and normal mode in iTerm2.app
+if $TERM_PROGRAM =~ "iTerm"
+    let &t_SI = "\<Esc>]50;CursorShape=1\x7" " Vertical bar in insert mode
+    let &t_EI = "\<Esc>]50;CursorShape=0\x7" " Block in normal mode
+endif
+
+" Apply macro to the visually selected lines
+xnoremap @ :<C-u>call ExecuteMacroOverVisualRange()<CR>
+function! ExecuteMacroOverVisualRange()
+  echo "@".getcmdline()
+  execute ":'<,'>normal @".nr2char(getchar())
+endfunction

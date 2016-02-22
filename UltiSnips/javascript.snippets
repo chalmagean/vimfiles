@@ -32,7 +32,7 @@ export function ${1:name}($2) {
 endsnippet
 
 snippet cl
-console.log($0);
+console.log("--------- ${1:name} ", $1);$0
 endsnippet
 
 snippet req
@@ -91,4 +91,42 @@ endsnippet
 
 snippet exp "expect"
 expect($1).to.equal($0)
+endsnippet
+
+snippet rc "React.createClass"
+window.${1:ComponentName} = React.createClass({
+	render: function() {
+		return (
+			<div>
+				$0$1 Component
+			</div>
+		);
+	}
+});
+endsnippet
+
+snippet map "map"
+${1:collection}.map(function(${2:element}) {
+	return $0;
+}${3:.bind(this)})
+endsnippet
+
+snippet /* "comment"
+{/* $0 */}
+endsnippet
+
+snippet mod "module"
+var ${1:ModuleName} = (function() {
+	// Private variables
+
+	// Private functions
+
+	// Constructor
+	var self = {};
+
+	// Public functions
+	$0
+
+	return self;
+}());
 endsnippet

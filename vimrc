@@ -23,7 +23,7 @@ set statusline+=%=                           " right align remainder
 set statusline+=%-14(%l,%c%V%)               " line, character
 set statusline+=%<%P                         " file position
 set autowrite     " Automatically :write before running commands
-set noignorecase
+set ignorecase
 set infercase
 set smartcase
 set foldlevel=99
@@ -38,7 +38,6 @@ set wildignorecase
 set wildmode=list:full
 
 set lazyredraw
-set ttyfast
 
 set nocursorcolumn
 set nocursorline
@@ -61,13 +60,6 @@ endif
 " The "Press ENTER or type command to continue" prompt is jarring and usually unnecessary.
 set shortmess=atI
 
-set t_Co=256
-" Switch syntax highlighting on, when the terminal has colors
-" Also switch on highlighting the last used search pattern.
-if (&t_Co > 2 || has("gui_running")) && !exists("syntax_on")
-  syntax on
-endif
-
 if filereadable(expand("~/.vim/vimrc.bundles"))
   source ~/.vim/vimrc.bundles
 endif
@@ -85,9 +77,6 @@ augroup BgHighlight
   autocmd WinEnter * set cul
   autocmd WinLeave * set nocul
 augroup END
-
-" Check buffer with Neomake on save
-autocmd! BufWritePost * Neomake
 
 cnoreabbrev W w
 cnoreabbrev Q q
@@ -114,10 +103,12 @@ augroup vimrcEx
 
   " Allow css and slim files to autocomplete hyphenated words
   autocmd FileType ruby,css,scss,sass,slim setlocal iskeyword+=-
-  autocmd FileType slim setlocal textwidth=120
+  autocmd FileType slim setlocal textwidth=999
+  autocmd FileType slim setlocal foldmethod=indent
 
   autocmd FileType ruby setlocal colorcolumn=+1
   autocmd FileType ruby setlocal number
+  autocmd FileType ruby setlocal foldmethod=indent
 augroup END
 
 augroup VIMRC
@@ -217,12 +208,14 @@ au BufNewFile,BufRead,BufEnter *.rb set nocursorline
 " Custom mappings
 nnoremap <leader>v :e ~/.vimrc<cr>
 nnoremap <leader>V :e ~/.vim/vimrc.bundles<cr>
-nnoremap <leader>a :Ag<cr>
-nnoremap K :Ag "\b<C-R><C-W>\b"<cr>
+nnoremap <leader>a :Ag! 
+nnoremap <leader>h :noh<cr>
+nnoremap K :Ag! "\b<C-R><C-W>\b"<cr>
 nnoremap <Tab> ^==<Esc>
 inoremap kj <Esc>
 nnoremap # :%s/<C-r><C-w>//n<CR>
 
+nnoremap <C-"> cs'"
 " Resizing windows
 nnoremap <C-up> <C-W>+
 nnoremap <C-down> <C-W>-
