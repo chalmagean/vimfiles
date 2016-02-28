@@ -170,8 +170,7 @@ let g:Tlist_Ctags_Cmd="ctags --exclude='*.js'"
 " Directory list style
 let g:netrw_banner = 0
 let g:netrw_preview = 1
-let g:netrw_liststyle = 3
-let g:netrw_winsize   = 30
+let g:netrw_liststyle = 0
 
 " Treat <li> and <p> tags like the block tags they are
 let g:html_indent_tags = 'li\|p'
@@ -209,12 +208,18 @@ au BufNewFile,BufRead,BufEnter *.rb set nocursorline
 nnoremap <leader>v :e ~/.vimrc<cr>
 nnoremap <leader>V :e ~/.vim/vimrc.bundles<cr>
 nnoremap <leader>a :Ag! 
+" Disable highlighting
 nnoremap <leader>h :noh<cr>
+" Search for the word under cursor in the whole project
 nnoremap K :Ag! "\b<C-R><C-W>\b"<cr>
 nnoremap <Tab> ^==<Esc>
+" Esc with kj
 inoremap kj <Esc>
 nnoremap # :%s/<C-r><C-w>//n<CR>
+" Open current directory
+map <leader>j :e %:h<CR>
 
+" Change surrounding single quotes to double quotes
 nnoremap <C-"> cs'"
 " Resizing windows
 nnoremap <C-up> <C-W>+

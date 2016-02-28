@@ -18,7 +18,6 @@ Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
 Plug 'tpope/gem-browse'
 Plug 'tpope/vim-eunuch'
-Plug 'scrooloose/nerdtree'
 Plug 'tpope/vim-rake'
 Plug 'morhetz/gruvbox'
 Plug 'tpope/vim-projectionist'
@@ -157,9 +156,6 @@ function! Quick_scope_selective(movement)
 
     return a:movement . letter
 endfunction
-
-map <leader>n :NERDTreeToggle<CR>
-map <leader>j :NERDTreeFind<CR>
 
 " Load a color theme
 set background=dark
