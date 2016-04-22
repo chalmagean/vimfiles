@@ -29,6 +29,7 @@ set smartcase
 set foldlevel=99
 set hidden
 set nrformats=hex " Don't increment octals numbers
+set formatoptions+=j " delete comment character when joining commented lines
 
 " Make ESC respond faster
 set timeoutlen=1000
@@ -81,9 +82,6 @@ augroup END
 cnoreabbrev W w
 cnoreabbrev Q q
 
-"open def in new tab
-map <C-\> :tab split<CR>:exec("tag ".expand("<cword>"))<CR>
-
 augroup vimrcEx
   autocmd!
 
@@ -103,12 +101,15 @@ augroup vimrcEx
 
   " Allow css and slim files to autocomplete hyphenated words
   autocmd FileType ruby,css,scss,sass,slim setlocal iskeyword+=-
-  autocmd FileType slim setlocal textwidth=999
-  autocmd FileType slim setlocal foldmethod=indent
 
   autocmd FileType ruby setlocal colorcolumn=+1
-  autocmd FileType ruby setlocal number
-  autocmd FileType ruby setlocal foldmethod=indent
+
+  " Insert the pipe |> with <C-l>
+  autocmd FileType elixir inoremap <C-l> \|> 
+
+  autocmd FileType ruby,elixir,eelixir,slim setlocal number
+  autocmd FileType ruby,elixir,eelixir,slim setlocal textwidth=0
+  autocmd FileType ruby,elixir,eelixir,slim setlocal foldmethod=indent
 augroup END
 
 augroup VIMRC
@@ -212,26 +213,39 @@ nnoremap <leader>a :Ag!
 nnoremap <leader>h :noh<cr>
 " Search for the word under cursor in the whole project
 nnoremap K :Ag! "\b<C-R><C-W>\b"<cr>
-nnoremap <Tab> ^==<Esc>
-" Esc with kj
-inoremap kj <Esc>
 nnoremap # :%s/<C-r><C-w>//n<CR>
-" Open current directory
-map <leader>j :e %:h<CR>
 
-" Change surrounding single quotes to double quotes
-nnoremap <C-"> cs'"
 " Resizing windows
-nnoremap <C-up> <C-W>+
-nnoremap <C-down> <C-W>-
-nnoremap <C-left> <C-W><
-nnoremap <C-right> <C-W>>
+nnoremap <Left> :vertical resize -2<CR>
+nnoremap <Right> :vertical resize +2<CR>
+nnoremap <Up> :resize +2<CR>
+nnoremap <Down> :resize -2<CR>
 
 " Auto save contents of a buffer when you lose focus
 autocmd BufLeave,FocusLost * silent! update
 
 " Based on a range, it replace `:my_key => "value"` to `my_key: value`
 command! -range OldToNewHash <line1>,<line2>s/:\([a-zA-Z-0-9_]\+\)\s*=>/\1:/g
+
+" Get the ticket number from the branch name
+nnoremap <leader>gx :call ExtractTicketNumber()<cr>
+
+" Extract the ticket number out of the branch name
+" Works if branch name looks like this:
+" feature/123_name_of_the_branch
+function ExtractTicketNumber()
+  " Lookup the ticket number and put it inside []
+  " Also store it in register q
+  execute "normal! /featur\rf/lvt_\"qyggi[\e\"qpA] "
+  let ticket_number = getreg('q')
+
+  " If the ticket number is all digits insert a # sign in front of it
+  if ticket_number =~ '^\d\+$'
+    execute "normal! F[a#\eA"
+  endif
+
+  startinsert!
+endfunction
 
 " Find where a partial is called
 " With no arguments it uses the current file name to do the search.
@@ -256,3 +270,22 @@ command! -nargs=? GrepPartial call GrepPartial(<args>)
 " Set a dark color for syntastic sign background
 highlight SyntasticErrorSign ctermbg=NONE ctermfg=red guibg=#2a343a guifg=red
 highlight SyntasticWarningSign ctermbg=NONE ctermfg=142 guibg=#2a343a guifg=#ad9909
+
+" Change cursor shape between insert and normal mode in iTerm2.app
+if $TERM_PROGRAM =~ "iTerm"
+    let &t_SI = "\<Esc>]50;CursorShape=1\x7" " Vertical bar in insert mode
+    let &t_EI = "\<Esc>]50;CursorShape=0\x7" " Block in normal mode
+endif
+
+" Damian Conway's Die Blinkënmatchen: highlight matches
+nnoremap <silent> n n:call HLNext(0.5)<cr>
+nnoremap <silent> N N:call HLNext(0.5)<cr>
+
+function! HLNext (blinktime)
+  let target_pat = '\c\%#'.@/
+  let ring = matchadd('ErrorMsg', target_pat, 101)
+  redraw
+  exec 'sleep ' . float2nr(a:blinktime * 1000) . 'm'
+  call matchdelete(ring)
+  redraw
+endfunction

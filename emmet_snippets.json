@@ -1,0 +1,19 @@
+
+{
+  "variables": {
+    "lang": "en",
+    "locale": "en-US",
+    "charset": "UTF-8",
+    "indentation": "\t",
+    "newline": "\n"
+  },
+
+  "erb": {
+    "extends": "html",
+    "profile": "erb",
+    "filters": "html",
+    "snippets": {
+            "%%": "<% ${child} %>"
+    }
+  }
+}

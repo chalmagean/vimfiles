@@ -12,9 +12,22 @@ snippet al
 allow($1).to receive($2).${3:and_return(${4:double.as_null_object})}$0
 endsnippet
 
-snippet ex
+snippet ext "expect().to"
+expect($1).to 
+endsnippet
+
+snippet exr "expect().to receive().and_return()"
 expect($1).to receive($2).${3:and_return(${4:double.as_null_object})}$0
 endsnippet
+
+snippet exq "expect().to eq()"
+expect($1).to eq($0)
+endsnippet
+
+snippet exc
+expect(page).to have_content("$1")$0
+endsnippet
+
 
 snippet ano
 as_null_object$0

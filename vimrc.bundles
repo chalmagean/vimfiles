@@ -18,15 +18,18 @@ Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
 Plug 'tpope/gem-browse'
 Plug 'tpope/vim-eunuch'
+Plug 'scrooloose/nerdtree'
 Plug 'tpope/vim-rake'
 Plug 'morhetz/gruvbox'
 Plug 'tpope/vim-projectionist'
+Plug 'tpope/vim-liquid'
 Plug 'vim-ruby/vim-ruby'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-endwise'
 Plug 'ecomba/vim-ruby-refactoring'
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'stephpy/vim-yaml'
+Plug 'noprompt/vim-yardoc'
 Plug 'SirVer/ultisnips'
 Plug 'mhinz/vim-grepper'
 Plug 'mustache/vim-mustache-handlebars'
@@ -51,9 +54,18 @@ Plug 'marijnh/tern_for_vim', { 'do': 'npm install' }
 Plug 'othree/jspc.vim'
 Plug 'ramitos/jsctags'
 Plug 'rking/ag.vim'
-Plug 'vim-airline/vim-airline'
+Plug 'itchyny/lightline.vim'
 Plug 'w0ng/vim-hybrid'
 Plug 'junegunn/gv.vim'
+Plug 'vim-scripts/ReplaceWithRegister'
+Plug 'kana/vim-textobj-indent'
+Plug 'christoomey/vim-system-copy'
+Plug 'whatyouhide/vim-textobj-erb'
+Plug 'kana/vim-textobj-user'
+Plug 'ap/vim-css-color'
+Plug 'keith/gist.vim'
+Plug 'ElmCast/elm-vim'
+Plug 'mattn/webapi-vim'
 
 if filereadable(expand("~/.vimrc.bundles.local"))
   source ~/.vimrc.bundles.local
@@ -61,7 +73,23 @@ endif
 
 call plug#end()
 
-nnoremap <leader>b :BufExplorerHorizontalSplit<CR>
+nnoremap <leader>b :CtrlPBuffer<CR>
+map <leader>n :NERDTreeToggle<CR>
+map <leader>j :NERDTreeFind<CR>
+
+let g:user_emmet_settings = webapi#json#decode(join(readfile(expand('~/.vim/emmet_snippets.json')), "\n"))
+
+let g:elm_format_autosave = 1
+let g:elm_setup_keybindings = 0
+let g:elm_syntastic_show_warnings = 1
+let g:elm_make_output_file = "elm.js"
+au FileType elm nmap <leader>m <Plug>(elm-make)
+au FileType elm nmap <leader>b <Plug>(elm-make-main)
+au FileType elm nmap <leader>t <Plug>(elm-test)
+au FileType elm nmap <leader>r <Plug>(elm-repl)
+au FileType elm nmap <leader>e <Plug>(elm-error-detail)
+au FileType elm nmap <leader>d <Plug>(elm-show-docs)
+au FileType elm nmap <leader>w <Plug>(elm-browse-docs)
 
 " CtrlP
 let g:ctrlp_custom_ignore = {
@@ -75,6 +103,7 @@ let g:ctrlp_mruf_max = 500
 let g:ctrlp_mruf_relative = 1
 let g:ctrlp_buftag_ctags_bin = '/usr/local/bin/ctags'
 let g:ctrlp_match_window = 'bottom,order:btt,min:1,max:20'
+let g:ctrlp_arg_map = 1
 
 let g:vim_json_syntax_conceal = 0
 " The Silver Searcher
@@ -90,10 +119,6 @@ if executable('ag')
   " let g:ctrlp_use_caching = 1
 endif
 
-let g:airline_left_sep=''
-let g:airline_right_sep=''
-let g:airline_extensions = []
-
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 1
 let g:syntastic_aggregate_errors = 1
@@ -105,6 +130,8 @@ let g:syntastic_stl_format = ' [%E{Err: %fe #%e}%B{, }%W{Warn: %fw #%w}]'
 let g:syntastic_ruby_checkers = ['mri', 'rubocop', 'rubylint']
 let g:syntastic_javascript_checkers = ['eslint']
 let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_loc_list_height = 3
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
@@ -132,7 +159,7 @@ let g:bufExplorerShowDirectories=0
 let g:UltiSnipsDontReverseSearchPath = '1'
 let g:UltiSnipsSnippetDirectories = ['UltiSnips']
 let g:UltiSnipsEditSplit = 'horizontal'
-let g:UltiSnipsListSnippets = '<c-l>'
+let g:UltiSnipsListSnippets = '<c-tab>'
 let g:UltiSnipsExpandTrigger = '<tab>'
 let g:UltiSnipsJumpForwardTrigger = '<tab>'
 let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'

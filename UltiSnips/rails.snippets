@@ -26,10 +26,6 @@ snippet sop
 save_and_open_page$0
 endsnippet
 
-snippet exc
-expect(page).to have_content("$1")$0
-endsnippet
-
 snippet con
 context '$1' do
 	$0
@@ -72,8 +68,12 @@ puts $0.inspect
 puts "------------------------\n\n"
 endsnippet
 
-snippet exre "expect(response).to eq()"
-expect(${1:response}).to eq($0)
+snippet fd "FactoryGirl.define"
+FactoryGirl.define do
+	factory :$1 do
+		$0
+	end
+end
 endsnippet
 
 snippet step
