@@ -271,15 +271,9 @@ command! -nargs=? GrepPartial call GrepPartial(<args>)
 highlight SyntasticErrorSign ctermbg=NONE ctermfg=red guibg=#2a343a guifg=red
 highlight SyntasticWarningSign ctermbg=NONE ctermfg=142 guibg=#2a343a guifg=#ad9909
 
-" Change cursor shape between insert and normal mode in iTerm2.app
-if $TERM_PROGRAM =~ "iTerm"
-    let &t_SI = "\<Esc>]50;CursorShape=1\x7" " Vertical bar in insert mode
-    let &t_EI = "\<Esc>]50;CursorShape=0\x7" " Block in normal mode
-endif
-
 " Damian Conway's Die Blinkënmatchen: highlight matches
-nnoremap <silent> n n:call HLNext(0.5)<cr>
-nnoremap <silent> N N:call HLNext(0.5)<cr>
+nnoremap <silent> n n:call HLNext(0.1)<cr>
+nnoremap <silent> N N:call HLNext(0.1)<cr>
 
 function! HLNext (blinktime)
   let target_pat = '\c\%#'.@/
@@ -289,3 +283,4 @@ function! HLNext (blinktime)
   call matchdelete(ring)
   redraw
 endfunction
+
