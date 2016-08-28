@@ -12,3 +12,34 @@ endsnippet
 snippet html5
 <!DOCTYPE html>
 endsnippet
+
+snippet btf "text_field"
+<div class="form-group">
+	<%= f.label :${1:field_name} %>
+	<%= f.text_field :$1, class: "form-control" %>
+</div>$0
+endsnippet
+
+snippet bs "submit"
+<div class="form-group">
+	<%= f.submit :${1:submit}, class: "btn btn-${2:default}" %>
+</div>$0
+endsnippet
+
+snippet rsindex
+<% if @${1:resource}s.present? %>
+	<table>
+		<thead>
+			<tr><th>Name</th></tr>
+		</thead>
+		<tbody>
+			<% @$1s.each do |role| %>
+				<tr><td><%= link_to $1.${2:title}, ${3:$1}_path($1) %></td></tr>
+			<% end %>
+		</tbody>
+	</table>
+<% else %>
+	<p>No $1s.</p>
+<% end %>
+
+endsnippet

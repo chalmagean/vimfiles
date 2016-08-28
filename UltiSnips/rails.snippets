@@ -79,3 +79,63 @@ endsnippet
 snippet step
 step %($0)
 endsnippet
+
+snippet fi "fill_in"
+fill_in '$1', with: '$2'$0
+endsnippet
+
+snippet vp "validates presence"
+validates :$1, presence: true$0
+endsnippet
+
+snippet rsindex "index controller action"
+def index
+	@${1/./\l$0/}s = ${1:Model}.all
+end
+endsnippet
+
+snippet rsedit "edit controller action"
+def edit
+	@${1/./\l$0/} = ${1:Model}.find(params.require(:id))
+end
+endsnippet
+
+snippet rscreate "create controller action"
+def create
+	@${1/./\l$0/} = ${1:Model}.new(params[:${1/./\l$0/}])
+
+	respond_to do |wants|
+		if @${1/./\l$0/}.save
+			flash[:notice] = '${1:Model} was successfully created.'
+			wants.html { redirect_to(@${1/./\l$0/}) }
+		else
+			wants.html { render action: 'new' }
+		end
+	end
+end
+endsnippet
+
+snippet rsupdate "update controller action"
+def update
+	@role = ${1}.find(params.require(:id))
+
+	respond_to do |wants|
+		if @${1/./\l$0/}.update(${1/./\l$0/}_params)
+			flash[:notice] = '${1:Model} was successfully updated.'
+			wants.html { redirect_to(@${1/./\l$0/}) }
+		else
+			wants.html { render :action => "edit" }
+		end
+	end
+end
+endsnippet
+
+snippet ftsc "feature scenario"
+scenario '$1' do
+	$0
+end
+endsnippet
+
+snippet ftex "expect(page).to ..."
+expect(page).to have_css('$1', text: '$2')$0
+endsnippet
