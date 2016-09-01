@@ -1,6 +1,12 @@
 " Leader
 let mapleader = "\<Space>"
 
+" Softtabs, 2 spaces
+set tabstop=2
+set shiftwidth=2
+set shiftround
+set expandtab
+
 set exrc
 set secure
 set backspace=2   " Backspace deletes like most programs in insert mode
@@ -13,22 +19,29 @@ set ruler         " show the cursor position all the time
 set showcmd       " display incomplete commands
 set incsearch     " do incremental searching
 set laststatus=2  " Always display the status line
+set sidescroll=1
 set statusline=
-set statusline+=%-6.3n\                     " buffer number
+set statusline+=%-6.3n\                      " buffer number
 set statusline+=%f\                          " filename
 set statusline+=%h%m%r%w                     " status flags
 set statusline+=\[%{strlen(&ft)?&ft:'none'}] " file type
 set statusline+=%=                           " right align remainder
-" set statusline+=0x%-8B                       " character value
+" set statusline+=0x%-8B                     " character value
 set statusline+=%-14(%l,%c%V%)               " line, character
 set statusline+=%<%P                         " file position
-set autowrite     " Automatically :write before running commands
+set autowrite                                " Automatically :write before
+                                             " running commands
 set ignorecase
 set infercase
 set smartcase
 set foldlevel=99
 set hidden
-set nrformats=hex " Don't increment octals numbers
+set nrformats=hex                            " Don't increment octals numbers
+
+set formatoptions=crql                       " Removed `o` from the default
+                                             " `croql` to prevent adding a 
+                                             " comment delimiter when you 
+                                             " press o/O
 set formatoptions+=j " delete comment character when joining commented lines
 
 " Make ESC respond faster
@@ -43,7 +56,7 @@ set lazyredraw
 set nocursorcolumn
 set nocursorline
 set norelativenumber
-set number
+set nonumber
 set numberwidth=5
 
 " Move backup files away from the current folder
@@ -108,7 +121,6 @@ augroup vimrcEx
   autocmd FileType elixir inoremap <C-l> \|> 
 
   autocmd FileType ruby,elixir,eelixir,slim setlocal number
-  autocmd FileType ruby,elixir,eelixir,slim setlocal textwidth=0
   autocmd FileType ruby,elixir,eelixir,slim setlocal foldmethod=indent
 augroup END
 
@@ -132,12 +144,6 @@ augroup VIMRC
   autocmd BufLeave *_spec.rb normal! mS
 augroup END
 
-" Softtabs, 2 spaces
-set tabstop=2
-set shiftwidth=2
-set shiftround
-set expandtab
-
 set scrolloff=3 " Keep 3 lines below and above the cursor
 
 " Gui MacVim
@@ -153,10 +159,7 @@ set list listchars=tab:»·,trail:·,nbsp:·
 set foldmethod=manual
 set showtabline=1
 
-" set grepprg=grep\ -rnH\ --exclude='.*.swp'\ --exclude='*~'\ --exclude=tags
-
-" Make it obvious where 80 characters is
-set textwidth=80
+set textwidth=0
 
 " ruby path if you are using RVM
 let g:ruby_path = system('rvm current')
@@ -171,7 +174,9 @@ let g:Tlist_Ctags_Cmd="ctags --exclude='*.js'"
 " Directory list style
 let g:netrw_banner = 0
 let g:netrw_preview = 1
-let g:netrw_liststyle = 0
+let g:netrw_liststyle = 3
+let g:netrw_hide = 1
+let g:netrw_list_hide = '.git,.sass-cache,.jpg,.png,.svg,TAGS,node_modules,.DS_Store,elm-stuff'
 
 " Treat <li> and <p> tags like the block tags they are
 let g:html_indent_tags = 'li\|p'
@@ -179,6 +184,9 @@ let g:html_indent_tags = 'li\|p'
 " Open new split panes to right and bottom, which feels more natural
 set splitbelow
 set splitright
+
+" Remove slipt separator vertical bar
+" set fillchars=fold:-
 
 " Set spellfile to location that is guaranteed to exist, can be symlinked to
 " Dropbox or kept in Git and managed outside of thoughtbot/dotfiles using rcm.
@@ -204,22 +212,6 @@ autocmd FileType css,scss set iskeyword=@,48-57,_,-,?,!,192-255
 autocmd FileType eruby set iskeyword=@,48-57,_,192-255,$,-
 " Disable cursorline in ruby files. It makes scrolling much faster.
 au BufNewFile,BufRead,BufEnter *.rb set nocursorline
-
-" Custom mappings
-nnoremap <leader>v :e ~/.vimrc<cr>
-nnoremap <leader>V :e ~/.vim/vimrc.bundles<cr>
-nnoremap <leader>a :Ag! 
-" Disable highlighting
-nnoremap <leader>h :noh<cr>
-" Search for the word under cursor in the whole project
-nnoremap K :Ag! "\b<C-R><C-W>\b"<cr>
-nnoremap # :%s/<C-r><C-w>//n<CR>
-
-" Resizing windows
-nnoremap <Left> :vertical resize -2<CR>
-nnoremap <Right> :vertical resize +2<CR>
-nnoremap <Up> :resize +2<CR>
-nnoremap <Down> :resize -2<CR>
 
 " Auto save contents of a buffer when you lose focus
 autocmd BufLeave,FocusLost * silent! update
@@ -265,22 +257,14 @@ command! -nargs=? GrepPartial call GrepPartial(<args>)
 
 " Set a dark color for the colorcolumn
 " highlight ColorColumn ctermbg=233 guibg=#272e34
-" highlight SignColumn ctermbg=NONE guibg=#2a343a
+
+" Make the gutter always visible
+autocmd BufEnter * sign define dummy
+autocmd BufEnter * execute 'sign place 9999 line=1 name=dummy buffer=' . bufnr('')
+
+" Set the gutter colors
+highlight SignColumn ctermbg=NONE guibg=#2a343a
 
 " Set a dark color for syntastic sign background
 highlight SyntasticErrorSign ctermbg=NONE ctermfg=red guibg=#2a343a guifg=red
 highlight SyntasticWarningSign ctermbg=NONE ctermfg=142 guibg=#2a343a guifg=#ad9909
-
-" Damian Conway's Die Blink�nmatchen: highlight matches
-nnoremap <silent> n n:call HLNext(0.1)<cr>
-nnoremap <silent> N N:call HLNext(0.1)<cr>
-
-function! HLNext (blinktime)
-  let target_pat = '\c\%#'.@/
-  let ring = matchadd('ErrorMsg', target_pat, 101)
-  redraw
-  exec 'sleep ' . float2nr(a:blinktime * 1000) . 'm'
-  call matchdelete(ring)
-  redraw
-endfunction
-

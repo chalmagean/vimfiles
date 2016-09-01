@@ -18,9 +18,9 @@ Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
 Plug 'tpope/gem-browse'
 Plug 'tpope/vim-eunuch'
-Plug 'scrooloose/nerdtree'
+" Plug 'scrooloose/nerdtree'
+Plug 'tpope/vim-vinegar'
 Plug 'tpope/vim-rake'
-Plug 'morhetz/gruvbox'
 Plug 'tpope/vim-projectionist'
 Plug 'tpope/vim-liquid'
 Plug 'vim-ruby/vim-ruby'
@@ -31,6 +31,7 @@ Plug 'AndrewRadev/splitjoin.vim'
 Plug 'stephpy/vim-yaml'
 Plug 'noprompt/vim-yardoc'
 Plug 'SirVer/ultisnips'
+Plug 'morhetz/gruvbox'
 Plug 'mhinz/vim-grepper'
 Plug 'mustache/vim-mustache-handlebars'
 Plug 'mattn/emmet-vim'
@@ -39,7 +40,7 @@ Plug 'elzr/vim-json'
 Plug 'othree/es.next.syntax.vim'
 Plug 'othree/jsdoc-syntax.vim'
 Plug 'othree/javascript-libraries-syntax.vim'
-Plug 'pangloss/vim-javascript'
+" Plug 'sheerun/vim-polyglot'
 Plug 'elixir-lang/vim-elixir'
 Plug 'vim-scripts/bufexplorer.zip'
 Plug 'kurko/smartest.vim'
@@ -47,13 +48,14 @@ Plug 'crusoexia/vim-monokai'
 Plug 'scrooloose/syntastic'
 Plug 'othree/csscomplete.vim'
 Plug 'kien/ctrlp.vim'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
 Plug 'othree/yajs.vim', { 'for': 'javascript' }
 Plug 'gavocanov/vim-js-indent'
 Plug 'marijnh/tern_for_vim', { 'do': 'npm install' }
 Plug 'othree/jspc.vim'
 Plug 'ramitos/jsctags'
 Plug 'rking/ag.vim'
-Plug 'itchyny/lightline.vim'
 Plug 'w0ng/vim-hybrid'
 Plug 'junegunn/gv.vim'
 Plug 'vim-scripts/ReplaceWithRegister'
@@ -61,10 +63,19 @@ Plug 'kana/vim-textobj-indent'
 Plug 'christoomey/vim-system-copy'
 Plug 'whatyouhide/vim-textobj-erb'
 Plug 'kana/vim-textobj-user'
-Plug 'ap/vim-css-color'
 Plug 'keith/gist.vim'
 Plug 'ElmCast/elm-vim'
 Plug 'mattn/webapi-vim'
+Plug 'altercation/vim-colors-solarized'
+Plug 'wincent/terminus'
+Plug 'junegunn/vim-peekaboo'
+Plug 'eagletmt/ghcmod-vim'
+Plug 'eagletmt/neco-ghc'
+Plug 'ervandew/supertab'
+Plug 'godlygeek/tabular'
+Plug 'tomtom/tlib_vim'
+Plug 'MarcWeber/vim-addon-mw-utils'
+Plug 'Shougo/vimproc.vim', {'do' : 'make'}
 
 if filereadable(expand("~/.vimrc.bundles.local"))
   source ~/.vimrc.bundles.local
@@ -73,26 +84,55 @@ endif
 call plug#end()
 
 nnoremap <leader>b :CtrlPBuffer<CR>
-map <leader>n :NERDTreeToggle<CR>
-map <leader>j :NERDTreeFind<CR>
+" map <leader>n :NERDTreeToggle<CR>
+" map <leader>j :NERDTreeFind<CR>
+map <leader>J :e %:h<CR>
+nnoremap <leader>ed :ElmShowDoc<cr>
+nnoremap <leader>eD :ElmBrowseDocs<cr>
+nnoremap <leader>ee :ElmErrorDetail<cr>
+
+" SuperTab
+let g:SuperTabDefaultCompletionType = '<c-x><c-o>'
+
+if has("gui_running")
+  imap <c-space> <c-r>=SuperTabAlternateCompletion("\<lt>c-x>\<lt>c-o>")<cr>
+else " no gui
+  if has("unix")
+    inoremap <Nul> <c-r>=SuperTabAlternateCompletion("\<lt>c-x>\<lt>c-o>")<cr>
+  endif
+endif
+
+let g:haskellmode_completion_ghc = 1
+autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
+
+" Tabular (for haskell)
+let g:haskell_tabular = 1
+
+vmap a= :Tabularize /=<CR>
+vmap a; :Tabularize /::<CR>
+vmap a- :Tabularize /-><CR>
+
+let g:peekaboo_compact = 0
+
+" let g:NERDTreeHijackNetrw = 0
+" let NERDTreeIgnore = ['node_modules$', 'elm-stuff$', 'TAGS$']
+" let NERDTreeAutoCenter = 1
+" let NERDTreeMouseMode = 3
+" let NERDTreeStatusline = -1
+" let NERDTreeMinimalUI = 1
+" let NERDTreeCascadeOpenSingleChildDir = 1
+" let NERDTreeAutoDeleteBuffer = 1
 
 let g:user_emmet_settings = webapi#json#decode(join(readfile(expand('~/.vim/emmet_snippets.json')), "\n"))
 
-let g:elm_format_autosave = 1
+let g:elm_format_autosave = 0
 let g:elm_setup_keybindings = 0
-let g:elm_syntastic_show_warnings = 1
-let g:elm_make_output_file = "elm.js"
-au FileType elm nmap <leader>m <Plug>(elm-make)
-au FileType elm nmap <leader>b <Plug>(elm-make-main)
-au FileType elm nmap <leader>t <Plug>(elm-test)
-au FileType elm nmap <leader>r <Plug>(elm-repl)
-au FileType elm nmap <leader>e <Plug>(elm-error-detail)
-au FileType elm nmap <leader>d <Plug>(elm-show-docs)
-au FileType elm nmap <leader>w <Plug>(elm-browse-docs)
+let g:elm_make_show_warnings = 0
+let g:elm_syntastic_show_warnings = 0
 
 " CtrlP
 let g:ctrlp_custom_ignore = {
-  \ 'dir':  '^\.git\|node_modules\|bin\|^\.hg\|\.svn\|build\|log\|resources\|coverage\|doc\|tmp\|public/assets\|vendor\|Android',
+  \ 'dir':  '^\.git\|^dist\|node_modules\|bin\|^\.hg\|\.svn\|build\|log\|resources\|coverage\|doc\|tmp\|public/assets\|vendor\|Android',
   \ 'file': '\.jpg$\|\.png$\|\.exe$\|\.so$\|tags$\|\.dll$'
   \ }
 let g:ctrlp_switch_buffer = 0
@@ -118,9 +158,10 @@ if executable('ag')
   " let g:ctrlp_use_caching = 1
 endif
 
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 1
-let g:syntastic_aggregate_errors = 1
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 0
+let g:syntastic_check_on_open = 0
+let g:syntastic_check_on_wq = 0
 let g:syntastic_error_symbol = "»"
 let g:syntastic_warning_symbol = "•"
 let g:syntastic_style_error_symbol = "»"
@@ -128,130 +169,10 @@ let g:syntastic_style_warning_symbol = "•"
 let g:syntastic_stl_format = ' [%E{Err: %fe #%e}%B{, }%W{Warn: %fw #%w}]'
 let g:syntastic_ruby_checkers = ['mri', 'rubocop', 'rubylint']
 let g:syntastic_javascript_checkers = ['eslint']
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 0
 let g:syntastic_loc_list_height = 3
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
-
-let g:lightline = {
-      \ 'colorscheme': 'wombat',
-      \ 'active': {
-      \   'left': [ [ 'mode', 'paste' ], [ 'fugitive', 'filename' ], ['ctrlpmark'] ],
-      \   'right': [ [ 'syntastic', 'lineinfo' ], ['percent'], [ 'fileformat', 'fileencoding', 'filetype' ] ]
-      \ },
-      \ 'component_function': {
-      \   'fugitive': 'LightLineFugitive',
-      \   'filename': 'LightLineFilename',
-      \   'fileformat': 'LightLineFileformat',
-      \   'filetype': 'LightLineFiletype',
-      \   'fileencoding': 'LightLineFileencoding',
-      \   'mode': 'LightLineMode',
-      \   'ctrlpmark': 'CtrlPMark',
-      \ },
-      \ 'component_expand': {
-      \   'syntastic': 'SyntasticStatuslineFlag',
-      \ },
-      \ 'component_type': {
-      \   'syntastic': 'error',
-      \ },
-      \ 'subseparator': { 'left': '|', 'right': '|' }
-      \ }
-
-function! LightLineModified()
-  return &ft =~ 'help' ? '' : &modified ? '+' : &modifiable ? '' : '-'
-endfunction
-
-function! LightLineReadonly()
-  return &ft !~? 'help' && &readonly ? 'RO' : ''
-endfunction
-
-function! LightLineFilename()
-  let fname = expand('%:t')
-  return fname == 'ControlP' && has_key(g:lightline, 'ctrlp_item') ? g:lightline.ctrlp_item :
-        \ fname == '__Tagbar__' ? g:lightline.fname :
-        \ fname =~ '__Gundo\|NERD_tree' ? '' :
-        \ &ft == 'vimfiler' ? vimfiler#get_status_string() :
-        \ &ft == 'unite' ? unite#get_status_string() :
-        \ &ft == 'vimshell' ? vimshell#get_status_string() :
-        \ ('' != LightLineReadonly() ? LightLineReadonly() . ' ' : '') .
-        \ ('' != fname ? fname : '[No Name]') .
-        \ ('' != LightLineModified() ? ' ' . LightLineModified() : '')
-endfunction
-
-function! LightLineFugitive()
-  try
-    if expand('%:t') !~? 'Tagbar\|Gundo\|NERD' && &ft !~? 'vimfiler' && exists('*fugitive#head')
-      let mark = ''  " edit here for cool mark
-      let _ = fugitive#head()
-      return strlen(_) ? mark._ : ''
-    endif
-  catch
-  endtry
-  return ''
-endfunction
-
-function! LightLineFileformat()
-  return winwidth(0) > 70 ? &fileformat : ''
-endfunction
-
-function! LightLineFiletype()
-  return winwidth(0) > 70 ? (strlen(&filetype) ? &filetype : 'no ft') : ''
-endfunction
-
-function! LightLineFileencoding()
-  return winwidth(0) > 70 ? (strlen(&fenc) ? &fenc : &enc) : ''
-endfunction
-
-function! LightLineMode()
-  let fname = expand('%:t')
-  return fname == '__Tagbar__' ? 'Tagbar' :
-        \ fname == 'ControlP' ? 'CtrlP' :
-        \ fname == '__Gundo__' ? 'Gundo' :
-        \ fname == '__Gundo_Preview__' ? 'Gundo Preview' :
-        \ fname =~ 'NERD_tree' ? 'NERDTree' :
-        \ &ft == 'unite' ? 'Unite' :
-        \ &ft == 'vimfiler' ? 'VimFiler' :
-        \ &ft == 'vimshell' ? 'VimShell' :
-        \ winwidth(0) > 60 ? lightline#mode() : ''
-endfunction
-
-function! CtrlPMark()
-  if expand('%:t') =~ 'ControlP' && has_key(g:lightline, 'ctrlp_item')
-    call lightline#link('iR'[g:lightline.ctrlp_regex])
-    return lightline#concatenate([g:lightline.ctrlp_prev, g:lightline.ctrlp_item
-          \ , g:lightline.ctrlp_next], 0)
-  else
-    return ''
-  endif
-endfunction
-
-let g:ctrlp_status_func = {
-  \ 'main': 'CtrlPStatusFunc_1',
-  \ 'prog': 'CtrlPStatusFunc_2',
-  \ }
-
-function! CtrlPStatusFunc_1(focus, byfname, regex, prev, item, next, marked)
-  let g:lightline.ctrlp_regex = a:regex
-  let g:lightline.ctrlp_prev = a:prev
-  let g:lightline.ctrlp_item = a:item
-  let g:lightline.ctrlp_next = a:next
-  return lightline#statusline(0)
-endfunction
-
-function! CtrlPStatusFunc_2(str)
-  return lightline#statusline(0)
-endfunction
-
-augroup AutoSyntastic
-  autocmd!
-  autocmd BufWritePost *.c,*.cpp call s:syntastic()
-augroup END
-function! s:syntastic()
-  SyntasticCheck
-  call lightline#update()
-endfunction
 
 let g:ag_prg="/usr/local/bin/ag --column"
 " Always start searching from your project root instead of the cwd
@@ -295,7 +216,7 @@ endfunction
 
 " Load a color theme
 set background=dark
-colorscheme hybrid
+color gruvbox
 
 " Change cursor shape between insert and normal mode in iTerm2.app
 if $TERM_PROGRAM =~ "iTerm"

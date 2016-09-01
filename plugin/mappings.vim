@@ -87,4 +87,6 @@ nnoremap <Leader>p :echo expand('%')<CR>
 nnoremap <silent> <leader>c :syntax sync fromstart<CR>
 
 " <LocalLeader>e -- Edit file, starting in same directory as current file.
-nnoremap <leader>e :edit <C-R>=expand('%:p:h') . '/'<CR>
+" nnoremap <leader>e :edit <C-R>=expand('%:p:h') . '/'<CR>
+
+nnoremap <leader>E :Errors<CR>
