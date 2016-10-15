@@ -48,8 +48,13 @@ set formatoptions+=j " delete comment character when joining commented lines
 set timeoutlen=1000
 set ttimeoutlen=0
 
+
+" When switching buffers, focus the buffer if already open in a different tab
+set switchbuf=usetab
+
 set wildignorecase
-set wildmode=list:full
+set wildignore+=tags,*.jpg,*.ico,*.png,*.gif,*.svg,.DS_Store,node_modules/,elm-stuff/,.git/
+set wildmode=longest:full,list:full
 
 set lazyredraw
 
@@ -122,6 +127,8 @@ augroup vimrcEx
 
   autocmd FileType ruby,elixir,eelixir,slim setlocal number
   autocmd FileType ruby,elixir,eelixir,slim setlocal foldmethod=indent
+
+  autocmd FileType elm setlocal cursorcolumn
 augroup END
 
 augroup VIMRC
@@ -138,6 +145,8 @@ augroup VIMRC
   autocmd BufLeave *.js normal! mJ
   autocmd BufLeave *.coffee normal! mJ
 
+  autocmd BufLeave *.elm normal! mE
+
   autocmd BufLeave *_controller.rb normal! mC
   autocmd BufLeave models/*.rb normal! mM
   autocmd BufLeave views/**/*.rb normal! mV
@@ -146,11 +155,35 @@ augroup END
 
 set scrolloff=3 " Keep 3 lines below and above the cursor
 
+if has("gui_vimr")
+endif
+
+if has("termguicolors")
+  set termguicolors
+endif
+
+if has("virtualedit")
+  " Allow cursor to move where there is no text in visual block mode
+  set virtualedit=block
+endif
+
 " Gui MacVim
-set guifont=Meslo\ LG\ M\ DZ:h13
-set guioptions-=T " Removes top toolbar
-set guioptions-=r " Removes right hand scroll bar
-set go-=L " Removes left hand scroll bar
+if has("gui_running")
+  " set background=light
+  " color PaperColor
+  set background=dark
+  color gruvbox
+  set guifont=Inconsolata\ for\ Powerline:h16
+  set guioptions-=T " Removes top toolbar
+  set guioptions-=r " Removes right hand scroll bar
+  set go-=L " Removes left hand scroll bar
+
+  " highlight CursorLine   cterm=NONE ctermbg=darkred ctermfg=white guibg=darkred guifg=NONE
+else " no gui
+  set background=dark
+  color gruvbox
+endif
+
 
 " Display extra whitespace
 set list listchars=tab:»·,trail:·,nbsp:·
@@ -174,9 +207,8 @@ let g:Tlist_Ctags_Cmd="ctags --exclude='*.js'"
 " Directory list style
 let g:netrw_banner = 0
 let g:netrw_preview = 1
-let g:netrw_liststyle = 3
 let g:netrw_hide = 1
-let g:netrw_list_hide = '.git,.sass-cache,.jpg,.png,.svg,TAGS,node_modules,.DS_Store,elm-stuff'
+" let g:netrw_liststyle = 1
 
 " Treat <li> and <p> tags like the block tags they are
 let g:html_indent_tags = 'li\|p'
@@ -225,7 +257,7 @@ nnoremap <leader>gx :call ExtractTicketNumber()<cr>
 " Extract the ticket number out of the branch name
 " Works if branch name looks like this:
 " feature/123_name_of_the_branch
-function ExtractTicketNumber()
+function! ExtractTicketNumber()
   " Lookup the ticket number and put it inside []
   " Also store it in register q
   execute "normal! /featur\rf/lvt_\"qyggi[\e\"qpA] "
@@ -256,15 +288,16 @@ endfunction
 command! -nargs=? GrepPartial call GrepPartial(<args>)
 
 " Set a dark color for the colorcolumn
-" highlight ColorColumn ctermbg=233 guibg=#272e34
+" highlight ColorColumn ctermbg=233 guibg=red
 
 " Make the gutter always visible
 autocmd BufEnter * sign define dummy
 autocmd BufEnter * execute 'sign place 9999 line=1 name=dummy buffer=' . bufnr('')
 
 " Set the gutter colors
-highlight SignColumn ctermbg=NONE guibg=#2a343a
+highlight SignColumn ctermbg=NONE guibg=NONE
 
 " Set a dark color for syntastic sign background
 highlight SyntasticErrorSign ctermbg=NONE ctermfg=red guibg=#2a343a guifg=red
 highlight SyntasticWarningSign ctermbg=NONE ctermfg=142 guibg=#2a343a guifg=#ad9909
+

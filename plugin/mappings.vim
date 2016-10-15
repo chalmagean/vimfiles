@@ -1,4 +1,5 @@
-" Command mode mappings.
+" Command mode mappings
+"""""""""""""""""""""""
 cnoremap <C-a> <Home>
 cnoremap <C-e> <End>
 
@@ -8,8 +9,13 @@ cnoremap <C-e> <End>
 " cnoremap <expr> <Tab> getcmdtype() == '/' \|\| getcmdtype() == '?' ? '<CR>/<C-r>/' : '<C-z>'
 " cnoremap <expr> <S-Tab> getcmdtype() == '/' \|\| getcmdtype() == '?' ? '<CR>?<C-r>/' : '<S-Tab>'
 
+cnoreabbrev W w
+cnoreabbrev Q q
+cnoreabbrev Qall qall
 
-" Visual mode mappings.
+
+" Visual mode mappings
+""""""""""""""""""""""
 xnoremap <C-h> <C-w>h
 xnoremap <C-j> <C-w>j
 xnoremap <C-k> <C-w>k
@@ -20,17 +26,11 @@ vnoremap > >gv
 vnoremap < <gv
 
 
-" Normal mode mappings.
-
-" Toggle fold at current position.
-" nnoremap <Tab> za
+" Normal mode mappings
+""""""""""""""""""""""
 
 " Repeat last macro if in a normal buffer.
 nnoremap <expr> <CR> empty(&buftype) ? '@@' : '<CR>'
-
-" Relying on Karabiner to avoid collision between <Tab> and <C-i> (have it send
-" F6 instead for <C-i>).
-" nnoremap <F6> <C-i>
 
 " Avoid unintentional switches to Ex mode.
 nmap Q q
@@ -38,32 +38,20 @@ nmap Q q
 " Multi-mode mappings (Normal, Visual, Operating-pending modes).
 noremap Y y$
 
-nnoremap <C-h> <C-w>h
-nnoremap <C-j> <C-w>j
-nnoremap <C-k> <C-w>k
-nnoremap <C-l> <C-w>l
+" nnoremap <silent> <Right> :vertical resize +5<CR>
+" nnoremap <silent> <Left> :vertical resize -5<CR>
+" nnoremap <silent> <Down> :resize +5<CR>
+" nnoremap <silent> <Up> :resize -5<CR>
 
-" Like vim-vinegar.
-nnoremap <silent> - :silent edit <C-R>=empty(expand('%')) ? '.' : expand('%:p:h')<CR><CR>
-
-" Repurpose cursor keys (accessible near homerow via "SpaceFN" layout) for one
-" of my most oft-use key sequences.
-nnoremap <silent> <Up> :cprevious<CR>
-nnoremap <silent> <Down> :cnext<CR>
-nnoremap <silent> <Left> :cpfile<CR>
-nnoremap <silent> <Right> :cnfile<CR>
-
-" Store relative line number jumps in the jumplist if they exceed a threshold.
-nnoremap <expr> k (v:count > 5 ? "m'" . v:count : '') . 'k'
-nnoremap <expr> j (v:count > 5 ? "m'" . v:count : '') . 'j'
+" Execute current line as an ex command
+nnoremap <f2> yy:@"<CR>
 
 " Search for the word under cursor in the whole project
 nnoremap K :Ag! "\b<C-R><C-W>\b"<cr>
-nnoremap # :%s/<C-r><C-w>//n<CR>
-nnoremap / /\v
 
 
-" Leader mappings.
+" Leader mappings
+"""""""""""""""""
 
 nnoremap <leader>v :e ~/.vimrc<cr>
 nnoremap <leader>V :e ~/.vim/vimrc.bundles<cr>
@@ -71,22 +59,34 @@ nnoremap <leader>a :Ag!<Space>
 
 " Disable highlighting
 nnoremap <leader>h :noh<cr>
-nnoremap <leader>w :w<cr>
 
 " <Leader><Leader> -- Open last buffer.
-nnoremap <Leader><Leader> <C-^>
-
-nnoremap <Leader>o :only<CR>
+nnoremap <leader><leader> <C-^>
 
 " <Leader>p -- Show the path of the current file (mnemonic: path; useful when
 " you have a lot of splits and the status line gets truncated).
-nnoremap <Leader>p :echo expand('%')<CR>
-
-" <LocalLeader>c -- Fix (most) syntax highlighting problems in current buffer
-" (mnemonic: coloring).
-nnoremap <silent> <leader>c :syntax sync fromstart<CR>
-
-" <LocalLeader>e -- Edit file, starting in same directory as current file.
-" nnoremap <leader>e :edit <C-R>=expand('%:p:h') . '/'<CR>
+" nnoremap <Leader>p :echo expand('%')<CR>
 
 nnoremap <leader>E :Errors<CR>
+
+nnoremap <leader>w :bw<CR>
+nnoremap <leader>W :BW<CR>
+
+" Go to tab by number
+noremap <leader>1 1gt
+noremap <leader>2 2gt
+noremap <leader>3 3gt
+noremap <leader>4 4gt
+noremap <leader>5 5gt
+noremap <leader>6 6gt
+noremap <leader>7 7gt
+noremap <leader>8 8gt
+noremap <leader>9 9gt
+noremap <leader>0 :tablast<cr>
+
+
+" Insert mode mappings
+""""""""""""""""""""""
+
+inoremap kj <Esc>
+

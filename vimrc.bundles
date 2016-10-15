@@ -6,30 +6,22 @@ call plug#begin('~/.vim/bundle')
 
 " Define bundles via Github repos
 Plug 'kchmck/vim-coffee-script'
-Plug 'NLKNguyen/papercolor-theme'
 Plug 'pbrisbin/vim-mkdir'
-Plug 'slim-template/vim-slim'
-Plug 'tpope/vim-bundler'
 Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-rails'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
-Plug 'tpope/gem-browse'
 Plug 'tpope/vim-eunuch'
-" Plug 'scrooloose/nerdtree'
-Plug 'tpope/vim-vinegar'
 Plug 'tpope/vim-rake'
 Plug 'tpope/vim-projectionist'
-Plug 'tpope/vim-liquid'
 Plug 'vim-ruby/vim-ruby'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-endwise'
 Plug 'ecomba/vim-ruby-refactoring'
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'stephpy/vim-yaml'
-Plug 'noprompt/vim-yardoc'
 Plug 'SirVer/ultisnips'
 Plug 'morhetz/gruvbox'
 Plug 'mhinz/vim-grepper'
@@ -40,16 +32,11 @@ Plug 'elzr/vim-json'
 Plug 'othree/es.next.syntax.vim'
 Plug 'othree/jsdoc-syntax.vim'
 Plug 'othree/javascript-libraries-syntax.vim'
-" Plug 'sheerun/vim-polyglot'
 Plug 'elixir-lang/vim-elixir'
 Plug 'vim-scripts/bufexplorer.zip'
 Plug 'kurko/smartest.vim'
-Plug 'crusoexia/vim-monokai'
-Plug 'scrooloose/syntastic'
-Plug 'othree/csscomplete.vim'
+Plug 'NLKNguyen/papercolor-theme'
 Plug 'kien/ctrlp.vim'
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-Plug 'junegunn/fzf.vim'
 Plug 'othree/yajs.vim', { 'for': 'javascript' }
 Plug 'gavocanov/vim-js-indent'
 Plug 'marijnh/tern_for_vim', { 'do': 'npm install' }
@@ -63,12 +50,9 @@ Plug 'kana/vim-textobj-indent'
 Plug 'christoomey/vim-system-copy'
 Plug 'whatyouhide/vim-textobj-erb'
 Plug 'kana/vim-textobj-user'
-Plug 'keith/gist.vim'
 Plug 'ElmCast/elm-vim'
 Plug 'mattn/webapi-vim'
-Plug 'altercation/vim-colors-solarized'
 Plug 'wincent/terminus'
-Plug 'junegunn/vim-peekaboo'
 Plug 'eagletmt/ghcmod-vim'
 Plug 'eagletmt/neco-ghc'
 Plug 'ervandew/supertab'
@@ -76,6 +60,9 @@ Plug 'godlygeek/tabular'
 Plug 'tomtom/tlib_vim'
 Plug 'MarcWeber/vim-addon-mw-utils'
 Plug 'Shougo/vimproc.vim', {'do' : 'make'}
+Plug 'isRuslan/vim-es6'
+Plug 'qpkorr/vim-bufkill'
+Plug 'Shougo/denite.nvim'
 
 if filereadable(expand("~/.vimrc.bundles.local"))
   source ~/.vimrc.bundles.local
@@ -84,23 +71,12 @@ endif
 call plug#end()
 
 nnoremap <leader>b :CtrlPBuffer<CR>
-" map <leader>n :NERDTreeToggle<CR>
-" map <leader>j :NERDTreeFind<CR>
-map <leader>J :e %:h<CR>
-nnoremap <leader>ed :ElmShowDoc<cr>
-nnoremap <leader>eD :ElmBrowseDocs<cr>
-nnoremap <leader>ee :ElmErrorDetail<cr>
 
 " SuperTab
 let g:SuperTabDefaultCompletionType = '<c-x><c-o>'
 
-if has("gui_running")
-  imap <c-space> <c-r>=SuperTabAlternateCompletion("\<lt>c-x>\<lt>c-o>")<cr>
-else " no gui
-  if has("unix")
-    inoremap <Nul> <c-r>=SuperTabAlternateCompletion("\<lt>c-x>\<lt>c-o>")<cr>
-  endif
-endif
+" Vimfiler
+let g:vimfiler_as_default_explorer = 1
 
 let g:haskellmode_completion_ghc = 1
 autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
@@ -112,28 +88,18 @@ vmap a= :Tabularize /=<CR>
 vmap a; :Tabularize /::<CR>
 vmap a- :Tabularize /-><CR>
 
-let g:peekaboo_compact = 0
-
-" let g:NERDTreeHijackNetrw = 0
-" let NERDTreeIgnore = ['node_modules$', 'elm-stuff$', 'TAGS$']
-" let NERDTreeAutoCenter = 1
-" let NERDTreeMouseMode = 3
-" let NERDTreeStatusline = -1
-" let NERDTreeMinimalUI = 1
-" let NERDTreeCascadeOpenSingleChildDir = 1
-" let NERDTreeAutoDeleteBuffer = 1
-
 let g:user_emmet_settings = webapi#json#decode(join(readfile(expand('~/.vim/emmet_snippets.json')), "\n"))
 
-let g:elm_format_autosave = 0
+let g:elm_format_autosave = 1
 let g:elm_setup_keybindings = 0
 let g:elm_make_show_warnings = 0
 let g:elm_syntastic_show_warnings = 0
 
 " CtrlP
+let g:ctrlp_map = '<leader>p'
 let g:ctrlp_custom_ignore = {
-  \ 'dir':  '^\.git\|^dist\|node_modules\|bin\|^\.hg\|\.svn\|build\|log\|resources\|coverage\|doc\|tmp\|public/assets\|vendor\|Android',
-  \ 'file': '\.jpg$\|\.png$\|\.exe$\|\.so$\|tags$\|\.dll$'
+  \ 'dir':  '^\.git\|^_build\|^dist\|node_modules\|bin\|^\.hg\|\.svn\|build\|log\|resources\|coverage\|doc\|tmp\|public/assets\|vendor\|Android',
+  \ 'file': '\.jpg$\|\.png$\|\.beam$\|\.exe$\|\.so$\|tags$\|\.dll$'
   \ }
 let g:ctrlp_switch_buffer = 0
 let g:ctrlp_working_path_mode = 0
@@ -158,21 +124,21 @@ if executable('ag')
   " let g:ctrlp_use_caching = 1
 endif
 
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 0
-let g:syntastic_check_on_open = 0
-let g:syntastic_check_on_wq = 0
-let g:syntastic_error_symbol = "»"
-let g:syntastic_warning_symbol = "•"
-let g:syntastic_style_error_symbol = "»"
-let g:syntastic_style_warning_symbol = "•"
-let g:syntastic_stl_format = ' [%E{Err: %fe #%e}%B{, }%W{Warn: %fw #%w}]'
-let g:syntastic_ruby_checkers = ['mri', 'rubocop', 'rubylint']
-let g:syntastic_javascript_checkers = ['eslint']
-let g:syntastic_loc_list_height = 3
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
+" let g:syntastic_always_populate_loc_list = 1
+" let g:syntastic_auto_loc_list = 1
+" let g:syntastic_check_on_open = 0
+" let g:syntastic_check_on_wq = 0
+" let g:syntastic_error_symbol = "»"
+" let g:syntastic_warning_symbol = "•"
+" let g:syntastic_style_error_symbol = "»"
+" let g:syntastic_style_warning_symbol = "•"
+" let g:syntastic_stl_format = ' [%E{Err: %fe #%e}%B{, }%W{Warn: %fw #%w}]'
+" let g:syntastic_ruby_checkers = ['mri', 'rubocop', 'rubylint']
+" let g:syntastic_javascript_checkers = ['eslint']
+" let g:syntastic_loc_list_height = 3
+" set statusline+=%#warningmsg#
+" set statusline+=%{SyntasticStatuslineFlag()}
+" set statusline+=%*
 
 let g:ag_prg="/usr/local/bin/ag --column"
 " Always start searching from your project root instead of the cwd
@@ -196,6 +162,8 @@ let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
 
 let g:grepper = { 'programs': ['ag'] }
 
+let g:rails_ctags_arguments = ['--languages=ruby']
+
 " Obviously depends on <https://github.com/unblevable/quick-scope> being installed.
 function! Quick_scope_selective(movement)
     let needs_disabling = 0
@@ -213,10 +181,6 @@ function! Quick_scope_selective(movement)
 
     return a:movement . letter
 endfunction
-
-" Load a color theme
-set background=dark
-color gruvbox
 
 " Change cursor shape between insert and normal mode in iTerm2.app
 if $TERM_PROGRAM =~ "iTerm"

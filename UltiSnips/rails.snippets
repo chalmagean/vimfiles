@@ -88,44 +88,51 @@ snippet vp "validates presence"
 validates :$1, presence: true$0
 endsnippet
 
+snippet rsfind "find_resource"
+def find_${1/./\l$0/}
+	@${1/./\l$0/} = ${1:Model}.find(params.require(:id))
+end
+endsnippet
+
+snippet rsparams "resource_params"
+def ${1:resource_name}_params
+	params.require(:$1).permit($0)
+end
+endsnippet
+
 snippet rsindex "index controller action"
 def index
 	@${1/./\l$0/}s = ${1:Model}.all
 end
 endsnippet
 
-snippet rsedit "edit controller action"
-def edit
-	@${1/./\l$0/} = ${1:Model}.find(params.require(:id))
+snippet rsnew "#new controller action"
+def new
+	@${1/./\l$0/} = ${1:Model}.new
 end
 endsnippet
 
-snippet rscreate "create controller action"
+snippet rscreate "#create controller action"
 def create
-	@${1/./\l$0/} = ${1:Model}.new(params[:${1/./\l$0/}])
+	@${1/./\l$0/} = ${1:Model}.new(${1/./\l$0/}_params)
 
-	respond_to do |wants|
-		if @${1/./\l$0/}.save
-			flash[:notice] = '${1:Model} was successfully created.'
-			wants.html { redirect_to(@${1/./\l$0/}) }
-		else
-			wants.html { render action: 'new' }
-		end
+	if @${1/./\l$0/}.save
+		flash[:notice] = t('.success')
+		redirect_to(@${1/./\l$0/})
+	else
+		flash[:alert] = t('.failure')
+		render action: :new
 	end
 end
 endsnippet
 
-snippet rsupdate "update controller action"
+snippet rsupdate "#update controller action"
 def update
-	@role = ${1}.find(params.require(:id))
-
-	respond_to do |wants|
-		if @${1/./\l$0/}.update(${1/./\l$0/}_params)
-			flash[:notice] = '${1:Model} was successfully updated.'
-			wants.html { redirect_to(@${1/./\l$0/}) }
-		else
-			wants.html { render :action => "edit" }
-		end
+	if @${1:resource_name}.update($1_params)
+		flash[:notice] = t('.success')
+		redirect_to(@$1)
+	else
+		render action: :edit
 	end
 end
 endsnippet

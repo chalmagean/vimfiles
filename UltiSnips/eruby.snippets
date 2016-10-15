@@ -15,9 +15,21 @@ endsnippet
 
 snippet btf "text_field"
 <div class="form-group">
-	<%= f.label :${1:field_name} %>
-	<%= f.text_field :$1, class: "form-control" %>
+	<%= ${2:f}.label :${1:field_name} %>
+	<%= $2.text_field :$1, class: "form-control" %>
 </div>$0
+endsnippet
+
+snippet bcb "check_box"
+<div class="checkbox">
+	<%= ${2:f}.label :${1:field_name} do %>
+		<%= $2.check_box :$1 %> <%= t('.$1_label') %>
+	<% end %>
+</div>
+endsnippet
+
+snippet t "<%= t('.something') %>"
+<%= t('.${1:key}') %>
 endsnippet
 
 snippet bs "submit"
