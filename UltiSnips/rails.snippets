@@ -88,6 +88,10 @@ snippet vp "validates presence"
 validates :$1, presence: true$0
 endsnippet
 
+snippet vl "validates length"
+validates :$1, length: { minimum: $0 }
+endsnippet
+
 snippet rsfind "find_resource"
 def find_${1/./\l$0/}
 	@${1/./\l$0/} = ${1:Model}.find(params.require(:id))
@@ -137,12 +141,101 @@ def update
 end
 endsnippet
 
-snippet ftsc "feature scenario"
+snippet resource "resource controller"
+class ${1:Model}sController < ApplicationController
+	before_action :find_${1/./\l$0/}, only: [:edit, :show, :update, :destroy]
+
+	def index
+		@${1/./\l$0/}s = $1.all
+	end
+
+	def new
+		@${1/./\l$0/} = $1.new
+	end
+
+	def edit
+	end
+
+	def show
+	end
+
+	def create
+		@${1/./\l$0/} = $1.new(${1/./\l$0/}_params)
+
+		if @${1/./\l$0/}.save
+			flash[:notice] = t('.success')
+			redirect_to(@${1/./\l$0/})
+		else
+			flash[:alert] = t('.failure')
+			render action: :new
+		end
+	end
+
+	def update
+		if @${1/./\l$0/}.update(${1/./\l$0/}_params)
+			flash[:notice] = t('.success')
+			redirect_to(@${1/./\l$0/})
+		else
+			render action: :edit
+		end
+	end
+
+	def destroy
+		@${1/./\l$0/}.destroy
+		flash[:notice] = t('.success')
+		redirect_to root_path
+	end
+
+	private
+
+		def ${1/./\l$0/}_params
+			params.require(:${1/./\l$0/}).permit($0)
+		end
+
+		def find_${1/./\l$0/}
+			@${1/./\l$0/} = $1.find(params.require(:id))
+		end
+end
+endsnippet
+
+snippet sc "feature scenario"
 scenario '$1' do
 	$0
 end
 endsnippet
 
-snippet ftex "expect(page).to ..."
+snippet itex "it { is_expected.to }"
+it { is_expected.to $0 }
+endsnippet
+
+snippet ex "expect(^).to ..."
+expect($1).to $0
+endsnippet
+
+snippet exe "expect(^).to eq(^)"
+expect($1).to eq($0)
+endsnippet
+
+snippet exm "expect(^).to match([^])"
+expect($1).to match([$0])
+endsnippet
+
+snippet exp "expect(page).to ..."
 expect(page).to have_css('$1', text: '$2')$0
+endsnippet
+
+snippet fgd "FactoryGirl.define"
+FactoryGirl.define do
+	factory :$1 do
+		$0
+	end
+end
+endsnippet
+
+snippet hatbm "has_many"
+has_many :$0
+endsnippet
+
+snippet hatbm "has_and_belongs_to_many"
+has_and_belongs_to_many :$0
 endsnippet

@@ -1,0 +1,29 @@
+snippet % "%{conn: conn}"
+%{${1:conn}: $1}
+endsnippet
+
+snippet test "test block"
+test "${1:description}", %{conn: conn} do
+	$0
+end
+endsnippet
+
+snippet desc "describe block"
+describe "${1:description}" do
+	test "${2:description}", %{conn: conn} do
+		$0
+	end
+end
+endsnippet
+
+snippet md "@moduledoc"
+@moduledoc """
+$0
+"""
+endsnippet
+
+snippet alter "alter table"
+alter table(:${1:table_name}) do
+	$0
+end
+endsnippet

@@ -13,6 +13,8 @@ cnoreabbrev W w
 cnoreabbrev Q q
 cnoreabbrev Qall qall
 
+" center search results
+cnoremap <expr> <CR> getcmdtype() =~ '[/?]' ? '<CR>zz' : '<CR>'
 
 " Visual mode mappings
 """"""""""""""""""""""
@@ -25,6 +27,8 @@ xnoremap <C-l> <C-w>l
 vnoremap > >gv
 vnoremap < <gv
 
+" Expand to current path
+cabbr %% <C-R>=expand('%:p:h')<CR>
 
 " Normal mode mappings
 """"""""""""""""""""""
@@ -45,20 +49,25 @@ noremap Y y$
 
 " Execute current line as an ex command
 nnoremap <f2> yy:@"<CR>
+nnoremap <f5> :BufOnly<CR>
+nnoremap <S-f5> :b1\|BufOnly<CR>
 
 " Search for the word under cursor in the whole project
-nnoremap K :Ag! "\b<C-R><C-W>\b"<cr>
+nnoremap K :exe "Ack ".expand('<cWORD>')<CR>
 
 
 " Leader mappings
 """""""""""""""""
 
+nnoremap <leader>p :Denite file_rec<cr>
 nnoremap <leader>v :e ~/.vimrc<cr>
 nnoremap <leader>V :e ~/.vim/vimrc.bundles<cr>
-nnoremap <leader>a :Ag!<Space>
+nnoremap <leader>a :Ack<Space>
 
 " Disable highlighting
 nnoremap <leader>h :noh<cr>
+
+nnoremap <leader>t :tabnew<cr>
 
 " <Leader><Leader> -- Open last buffer.
 nnoremap <leader><leader> <C-^>
@@ -67,10 +76,7 @@ nnoremap <leader><leader> <C-^>
 " you have a lot of splits and the status line gets truncated).
 " nnoremap <Leader>p :echo expand('%')<CR>
 
-nnoremap <leader>E :Errors<CR>
-
-nnoremap <leader>w :bw<CR>
-nnoremap <leader>W :BW<CR>
+nnoremap <leader>w :bp\|bd #<CR>
 
 " Go to tab by number
 noremap <leader>1 1gt
@@ -84,9 +90,21 @@ noremap <leader>8 8gt
 noremap <leader>9 9gt
 noremap <leader>0 :tablast<cr>
 
+nnoremap <leader>f :VimFiler<cr>
+nnoremap <leader>x :VimFilerExplorer<cr>
+nnoremap <leader>F :VimFilerExplorer -find<cr>
+nnoremap - :VimFilerBufferDir<cr>
+nnoremap _ :VimFilerBufferDir -horizontal -split -direction="bottom"<cr>
 
 " Insert mode mappings
 """"""""""""""""""""""
 
 inoremap kj <Esc>
+" Disable backspace so I am forced to use C-h
+inoremap <BS> <Nop>
 
+
+" Terminal mode mappings
+""""""""""""""""""""""""
+
+tnoremap <Esc> <C-\><C-n>

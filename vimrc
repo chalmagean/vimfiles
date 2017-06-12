@@ -7,6 +7,7 @@ set shiftwidth=2
 set shiftround
 set expandtab
 
+set visualbell
 set exrc
 set secure
 set backspace=2   " Backspace deletes like most programs in insert mode
@@ -103,6 +104,7 @@ cnoreabbrev Q q
 augroup vimrcEx
   autocmd!
 
+  autocmd TermOpen * setlocal statusline=%{b:term_title}
   " When editing a file, always jump to the last known cursor position.
   " Don't do it for commit messages, when the position is invalid, or when
   " inside an event handler (happens when dropping a file on gvim).
@@ -127,8 +129,6 @@ augroup vimrcEx
 
   autocmd FileType ruby,elixir,eelixir,slim setlocal number
   autocmd FileType ruby,elixir,eelixir,slim setlocal foldmethod=indent
-
-  autocmd FileType elm setlocal cursorcolumn
 augroup END
 
 augroup VIMRC
@@ -155,9 +155,6 @@ augroup END
 
 set scrolloff=3 " Keep 3 lines below and above the cursor
 
-if has("gui_vimr")
-endif
-
 if has("termguicolors")
   set termguicolors
 endif
@@ -168,25 +165,24 @@ if has("virtualedit")
 endif
 
 " Gui MacVim
-if has("gui_running")
-  " set background=light
-  " color PaperColor
-  set background=dark
-  color gruvbox
-  set guifont=Inconsolata\ for\ Powerline:h16
+if has("gui_vimr")
+  set background=light
+  color one
+  set guifont=Inconsolata:h18
+  set linespace=2
   set guioptions-=T " Removes top toolbar
   set guioptions-=r " Removes right hand scroll bar
   set go-=L " Removes left hand scroll bar
 
   " highlight CursorLine   cterm=NONE ctermbg=darkred ctermfg=white guibg=darkred guifg=NONE
 else " no gui
-  set background=dark
-  color gruvbox
+  color one
+  set background=light
 endif
 
 
 " Display extra whitespace
-set list listchars=tab:»·,trail:·,nbsp:·
+set list listchars=tab:»·,trail:.,nbsp:·
 
 " set folds, default open
 set foldmethod=manual
@@ -208,6 +204,8 @@ let g:Tlist_Ctags_Cmd="ctags --exclude='*.js'"
 let g:netrw_banner = 0
 let g:netrw_preview = 1
 let g:netrw_hide = 1
+let g:netrw_altv = 1
+let g:netrw_browse_split = 0
 " let g:netrw_liststyle = 1
 
 " Treat <li> and <p> tags like the block tags they are
@@ -301,3 +299,5 @@ highlight SignColumn ctermbg=NONE guibg=NONE
 highlight SyntasticErrorSign ctermbg=NONE ctermfg=red guibg=#2a343a guifg=red
 highlight SyntasticWarningSign ctermbg=NONE ctermfg=142 guibg=#2a343a guifg=#ad9909
 
+" Add a space after : and ,
+" :%s/[:,]\ze[^ ]/& /g
