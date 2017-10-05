@@ -16,6 +16,12 @@ describe "${1:description}" do
 end
 endsnippet
 
+snippet defm "defmodule Mod do ... end"
+defmodule ${1:Module.Name} do
+	$0
+end
+endsnippet
+
 snippet md "@moduledoc"
 @moduledoc """
 $0

@@ -99,7 +99,8 @@ nnoremap _ :VimFilerBufferDir -horizontal -split -direction="bottom"<cr>
 " Insert mode mappings
 """"""""""""""""""""""
 
-inoremap kj <Esc>
+" inoremap kj <Esc>
+
 " Disable backspace so I am forced to use C-h
 inoremap <BS> <Nop>
 
@@ -108,3 +109,4 @@ inoremap <BS> <Nop>
 """"""""""""""""""""""""
 
 tnoremap <Esc> <C-\><C-n>
+tnoremap <C-c> <C-\><C-n>
