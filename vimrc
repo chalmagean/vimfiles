@@ -157,7 +157,7 @@ augroup END
 set scrolloff=3 " Keep 3 lines below and above the cursor
 
 if has("termguicolors")
-  set termguicolors
+  " set termguicolors
 endif
 
 if has("virtualedit")
@@ -176,8 +176,8 @@ if has("gui_vimr")
 
   " highlight CursorLine   cterm=NONE ctermbg=darkred ctermfg=white guibg=darkred guifg=NONE
 else " no gui
-  color one
-  set background=light
+  color gruvbox
+  set background=dark
 endif
 
 
@@ -299,6 +299,8 @@ highlight SignColumn ctermbg=NONE guibg=NONE
 highlight SyntasticErrorSign ctermbg=NONE ctermfg=red guibg=#2a343a guifg=red
 highlight SyntasticWarningSign ctermbg=NONE ctermfg=142 guibg=#2a343a guifg=#ad9909
 
+let g:python3_host_prog = '/usr/local/bin/python3'
+
 " Add a space after : and ,
 " :%s/[:,]\ze[^ ]/& /g
 
@@ -363,10 +365,35 @@ function! ToggleInnerMultilineHTMLTagMode()
 endfunction
 
 " Map to set the multi-line HTML tag mode.
-nnoremap - :call ToggleInnerMultilineHTMLTagMode()<CR>
+" nnoremap - :call ToggleInnerMultilineHTMLTagMode()<CR>
 
 " Map to extend the behavior of the 'it' text object to create linewise
 " visual areas within multi-line HTML tags.
 " See https://vi.stackexchange.com/q/13050/6698
 vnoremap it it:<C-U>call InnerMultilineHTMLTag()<CR>
 omap it :normal vit<CR>
+
+" Remove diacritical signs from characters in specified range of lines.
+" Examples of characters replaced: á -> a, ç -> c, Á -> A, Ç -> C.
+" Uses substitute so changes can be confirmed.
+function! s:RemoveDiacritics(line1, line2)
+  let diacs = 'áâãàăâçéêíîóôõüúșț'  " lowercase diacritical signs
+  let repls = 'aaaaaaceeiiooouust'  " corresponding replacements
+  let diacs .= toupper(diacs)
+  let repls .= toupper(repls)
+  let diaclist = split(diacs, '\zs')
+  let repllist = split(repls, '\zs')
+  let trans = {}
+
+  for i in range(len(diaclist))
+    let trans[diaclist[i]] = repllist[i]
+  endfor
+
+  execute a:line1 . ',' . a:line2 . 's/[' . diacs . ']/\=trans[submatch(0)]/gIce'
+endfunction
+
+command! -range=% RemoveDiacritics call s:RemoveDiacritics(<line1>, <line2>)
+
+if filereadable(expand("~/.gvimrc.after"))
+  source ~/.gvimrc.after
+endif
