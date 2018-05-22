@@ -157,7 +157,7 @@ augroup END
 set scrolloff=3 " Keep 3 lines below and above the cursor
 
 if has("termguicolors")
-  " set termguicolors
+  set termguicolors
 endif
 
 if has("virtualedit")
@@ -213,7 +213,7 @@ let g:html_indent_tags = 'li\|p'
 set splitbelow
 set splitright
 
-set inccommand=split
+set inccommand=nosplit
 
 " Remove slipt separator vertical bar
 " set fillchars=fold:-

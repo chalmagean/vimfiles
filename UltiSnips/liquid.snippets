@@ -6,6 +6,10 @@ snippet {
 {{ $0 }}
 endsnippet
 
+snippet img
+{% img blog/$1 alt:'$2' class:'$3{:blog-preview-image}' %}$0
+endsnippet
+
 snippet rel
 - [${1:title}]({% post_url $0 %})
 endsnippet
