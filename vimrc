@@ -11,6 +11,8 @@ set expandtab
 set title
 
 set visualbell
+set linebreak     " Break lines without breaking words
+set wrap
 set exrc
 set secure
 set backspace=2   " Backspace deletes like most programs in insert mode
@@ -81,6 +83,9 @@ if exists('+undofile')
   set undoreload=10000 " maximum number lines to save for undo on a buffer reload
 endif
 
+set grepprg=ag\ --nogroup\ --nocolor\ --ignore-case\ --column\ --vimgrep
+set grepformat=%f:%l:%c:%m,%f:%l:%m
+
 " The "Press ENTER or type command to continue" prompt is jarring and usually unnecessary.
 set shortmess=a
 
@@ -130,6 +135,8 @@ augroup vimrcEx
   autocmd FileType elixir inoremap <C-l> \|> 
 
   autocmd FileType ruby,elixir,eelixir,slim setlocal number
+
+  autocmd FileType liquid setlocal iskeyword+=-
 augroup END
 
 augroup VIMRC
@@ -176,8 +183,9 @@ if has("gui_vimr")
 
   " highlight CursorLine   cterm=NONE ctermbg=darkred ctermfg=white guibg=darkred guifg=NONE
 else " no gui
-  color gruvbox
-  set background=dark
+  " color gruvbox
+  set background=light
+  color solarized8_light_flat
 endif
 
 
@@ -249,6 +257,10 @@ autocmd BufLeave,FocusLost * silent! update
 " Based on a range, it replace `:my_key => "value"` to `my_key: value`
 command! -range OldToNewHash <line1>,<line2>s/:\([a-zA-Z-0-9_]\+\)\s*=>/\1:/g
 
+" Update the bult-in CSS complete function to latest CSS standard
+autocmd FileType css set omnifunc=csscomplete#CompleteCSS noci
+autocmd Filetype vimfiler setlocal nocursorline
+
 " Get the ticket number from the branch name
 nnoremap <leader>gx :call ExtractTicketNumber()<cr>
 
@@ -284,9 +296,6 @@ function! GrepPartial(...)
   execute "grep! -Re '" . pattern . "' app/views/"
 endfunction
 command! -nargs=? GrepPartial call GrepPartial(<args>)
-
-" Set a dark color for the colorcolumn
-" highlight ColorColumn ctermbg=233 guibg=red
 
 " Make the gutter always visible
 autocmd BufEnter * sign define dummy
@@ -397,3 +406,5 @@ command! -range=% RemoveDiacritics call s:RemoveDiacritics(<line1>, <line2>)
 if filereadable(expand("~/.gvimrc.after"))
   source ~/.gvimrc.after
 endif
+
+
