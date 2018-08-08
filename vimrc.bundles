@@ -287,3 +287,7 @@ command! -bang -nargs=* Ag
 " Likewise, Files command with preview window
 command! -bang -nargs=? -complete=dir Files
   \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
+
+
+let g:ctagdirs = "!/usr/local/bin/ctags -R --fields=+iaS --extra=+q . ".$HOME."/.rvm/gems/".system("rvm current | tr -d '\n'")."/gems"
+map <F8> :exe g:ctagdirs<CR>
