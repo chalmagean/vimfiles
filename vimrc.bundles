@@ -29,6 +29,7 @@ Plug 'vim-scripts/Greplace.vim'
 Plug 'ecomba/vim-ruby-refactoring'
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'stephpy/vim-yaml'
+Plug 'SirVer/ultisnips'
 Plug 'mustache/vim-mustache-handlebars'
 Plug 'mxw/vim-jsx'
 Plug 'elzr/vim-json'
@@ -70,12 +71,24 @@ Plug 'w0rp/ale'
 Plug 'ethereum/vim-solidity'
 Plug 'janko-m/vim-test'
 Plug 'junegunn/vim-easy-align'
+Plug 'autozimu/LanguageClient-neovim', {
+    \ 'branch': 'next',
+    \ 'do': 'bash install.sh',
+    \ }
+
+let g:LanguageClient_serverCommands = {
+    \ 'javascript': ['node_modules/flow-bin/cli.js'],
+    \ 'javascript.jsx': ['tcp://127.0.0.1:2089'],
+    \ }
 
 " Elixir
+if has('nvim')
+  Plug 'awetzel/elixir.nvim', { 'do': 'yes \| ./install.sh' }
+endif
+
 Plug 'andyl/vim-textobj-elixir'
 Plug 'elixir-lang/vim-elixir'
 Plug 'thinca/vim-ref'
-Plug 'awetzel/elixir.nvim', { 'do': 'yes \| ./install.sh' }
 Plug 'c-brenn/phoenix.vim'
 Plug 'slashmili/alchemist.vim'
 
@@ -84,7 +97,7 @@ Plug 'powerman/vim-plugin-AnsiEsc'
 " Project navigation
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
-Plug 'scrooloose/nerdtree'
+" Plug 'scrooloose/nerdtree'
 
 " Themes
 Plug 'morhetz/gruvbox'
@@ -96,6 +109,9 @@ if filereadable(expand("~/.vimrc.bundles.local"))
 endif
 
 call plug#end()
+
+let g:vimfiler_as_default_explorer = 1
+autocmd FileType vimfiler nunmap <buffer> <TAB>
 
 let base16colorspace=256  " Access colors present in 256 colorspace
 
@@ -138,52 +154,9 @@ let g:ale_linters = {
 let g:alchemist#elixir_erlang_src = "/Users/cezar/Work/src"
 let g:alchemist_iex_term_split = 'split'
 
-let g:NERDTreeHijackNetrw = 1
-let NERDTreeIgnore = ['node_modules$', '^resources$', 'deps$', 'elm-stuff$', 'TAGS$', 'tags$', '_build$', 'coverage']
-let NERDTreeAutoCenter = 1
-let NERDTreeMouseMode = 3
-let NERDTreeStatusline = -1
-let NERDTreeMinimalUI = 1
-let NERDTreeCascadeOpenSingleChildDir = 1
-let NERDTreeAutoDeleteBuffer = 1
-let NERDTreeQuitOnOpen = 0
-let NERDTreeDirArrows = 1
-
 let g:titlecase_map_keys = 0
 
 au FileType markdown vmap <Leader><Bslash> :EasyAlign*<Bar><Enter>
-
-" " Run Neomake when I save any buffer
-" augroup localneomake
-"   autocmd! BufWritePost * Neomake
-" augroup END
-" " Don't tell me to use smartquotes in markdown ok?
-" let g:neomake_markdown_enabled_makers = []
-" " Configure a nice credo setup, courtesy https://github.com/neomake/neomake/pull/300
-" let g:neomake_elixir_enabled_makers = ['mycredo']
-" function! NeomakeCredoErrorType(entry)
-"   if a:entry.type ==# 'F'      " Refactoring opportunities
-"     let l:type = 'W'
-"   elseif a:entry.type ==# 'D'  " Software design suggestions
-"     let l:type = 'I'
-"   elseif a:entry.type ==# 'W'  " Warnings
-"     let l:type = 'W'
-"   elseif a:entry.type ==# 'R'  " Readability suggestions
-"     let l:type = 'I'
-"   elseif a:entry.type ==# 'C'  " Convention violation
-"     let l:type = 'W'
-"   else
-"     let l:type = 'M'           " Everything else is a message
-"   endif
-"   let a:entry.type = l:type
-" endfunction
-
-" let g:neomake_elixir_mycredo_maker = {
-"       \ 'exe': 'mix',
-"       \ 'args': ['credo', 'list', '%:p', '--format=oneline'],
-"       \ 'errorformat': '[%t] %. %f:%l:%c %m,[%t] %. %f:%l %m',
-"       \ 'postprocess': function('NeomakeCredoErrorType')
-"       \ }
 
 let g:haskellmode_completion_ghc = 1
 autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
@@ -212,6 +185,14 @@ let g:bufExplorerDefaultHelp=0
 let g:bufExplorerDisableDefaultKeyMapping=1
 let g:bufExplorerShowRelativePath=1
 let g:bufExplorerShowDirectories=0
+
+let g:UltiSnipsDontReverseSearchPath = '1'
+let g:UltiSnipsSnippetDirectories = ['UltiSnips']
+let g:UltiSnipsEditSplit = 'horizontal'
+let g:UltiSnipsListSnippets = '<c-tab>'
+let g:UltiSnipsExpandTrigger = '<tab>'
+let g:UltiSnipsJumpForwardTrigger = '<tab>'
+let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
 
 let g:rails_ctags_arguments = ['--languages=ruby']
 
@@ -287,7 +268,6 @@ command! -bang -nargs=* Ag
 " Likewise, Files command with preview window
 command! -bang -nargs=? -complete=dir Files
   \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
-
 
 let g:ctagdirs = "!/usr/local/bin/ctags -R --fields=+iaS --extra=+q . ".$HOME."/.rvm/gems/".system("rvm current | tr -d '\n'")."/gems"
 map <F8> :exe g:ctagdirs<CR>

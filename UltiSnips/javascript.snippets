@@ -10,6 +10,10 @@ $(document).on('${1:blur}', '${2:selector}', function(e) {
 });
 endsnippet
 
+snippet dbg
+debugger; // eslint-disable-line$0
+endsnippet
+
 snippet module
 var ${1:moduleName} = (function() {
 
@@ -38,11 +42,11 @@ export function ${1:name}($2) {
 endsnippet
 
 snippet cl
-console.log("--------- ${0}");$0
+console.log('--------- ${1:name} ', ${2:this.}$1);$0
 endsnippet
 
-snippet clv
-console.log("--------- ${1:name} ", $1);$0
+snippet cls
+console.log('--------- ${0}');$0
 endsnippet
 
 snippet req
@@ -149,6 +153,12 @@ endsnippet
 
 snippet it "it"
 it('$1', () => {
+	$0
+});
+endsnippet
+
+snippet jt "jest test"
+test('$1', ($2) => {
 	$0
 });
 endsnippet

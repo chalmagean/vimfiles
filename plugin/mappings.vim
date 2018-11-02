@@ -33,6 +33,11 @@ cabbr %% <C-R>=expand('%:p:h')<CR>
 " Normal mode mappings
 """"""""""""""""""""""
 
+" vinegar
+nmap - <Plug>VinegarUp
+nmap _ <Plug>VinegarSplitUp
+nmap \ <Plug>VinegarVerticalSplitUp
+
 " Repeat last macro if in a normal buffer.
 nnoremap <expr> <CR> empty(&buftype) ? '@@' : '<CR>'
 
@@ -41,6 +46,9 @@ nmap Q q
 
 " Multi-mode mappings (Normal, Visual, Operating-pending modes).
 noremap Y y$
+
+nnoremap <leader>- :split<CR>
+nnoremap <leader>\ :vsplit<CR>
 
 nnoremap <silent> <Right> :vertical resize +5<CR>
 nnoremap <silent> <Left> :vertical resize -5<CR>
@@ -69,31 +77,26 @@ nnoremap <leader><leader> :BD<CR>
 """""""""""""""""
 nnoremap <leader>v :e ~/.vimrc<cr>
 nnoremap <leader>V :e ~/.vim/vimrc.bundles<cr>
-nnoremap <leader>a :Ag<Space>
+nnoremap <leader>a :Ack<Space>
 nnoremap <C-p> :Files<cr>
 
 " Disable highlighting
 nnoremap <leader>h :noh<cr>
 
-nnoremap <leader>f :NERDTreeToggle<cr>
-nnoremap <leader>F :NERDTreeFind<cr>
+nnoremap <leader>f :VimFiler<cr>
+nnoremap <leader>F :VimFilerBufferDir<cr>
 
 " Copy file path
 nmap <leader>p :let @" = expand("%")<CR>
 
-" vinegar
-nmap - <Plug>VinegarUp
-nmap _ <Plug>VinegarSplitUp
-nmap \ <Plug>VinegarVerticalSplitUp
+" Insert mode mappings
+""""""""""""""""""""""
 
 " Insert mode completion
 imap <c-x><c-k> <plug>(fzf-complete-word)
 imap <c-x><c-f> <plug>(fzf-complete-path)
 imap <c-x><c-j> <plug>(fzf-complete-file-ag)
 imap <c-x><c-l> <plug>(fzf-complete-line)
-
-" Insert mode mappings
-""""""""""""""""""""""
 
 xnoremap <D-h> <C-w>h
 xnoremap <D-j> <C-w>j

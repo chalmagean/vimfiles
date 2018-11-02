@@ -27,13 +27,13 @@ save_and_open_page$0
 endsnippet
 
 snippet con
-context '$1' do
+context "$1" do
 	$0
 end
 endsnippet
 
 snippet desc
-describe '$1' do
+describe "$1" do
 	$0
 end
 endsnippet
@@ -126,6 +126,22 @@ def create
 	else
 		flash[:alert] = t('.failure')
 		render action: :new
+	end
+end
+endsnippet
+
+snippet jrscreate "#create json"
+def create
+	respond_to do |format|
+		@${1/./\l$0/} = ${1:Model}.new(${1/./\l$0/}_params)
+
+		if @${1/./\l$0/}.save
+			format.json { head :no_content }
+		else
+			format.json do
+				render json: { errors: @${1/./\l$0/}.errors }, status: :unprocessable_entity
+			end
+		end
 	end
 end
 endsnippet

@@ -2,3 +2,45 @@ snippet dbl "Debug.log"
 _ = Debug.log "${1:name}" $1
 endsnippet
 
+snippet new "create basic scaffold"
+module ${0:Main} exposing (main)
+
+import Browser
+import Html exposing (..)
+import Html.Attributes exposing (..)
+
+
+type alias Model =
+    {}
+
+
+initialModel : Model
+initialModel =
+    {}
+
+
+type Msg
+    = None
+
+
+update : Msg -> Model -> Model
+update msg model =
+    case msg of
+        _ ->
+            model
+
+
+view : Model -> Html Msg
+view model =
+    div [ class "" ]
+        []
+
+
+main : Program () Model Msg
+main =
+    Browser.sandbox
+        { init = initialModel
+        , view = view
+        , update = update
+        }
+endsnippet

@@ -110,10 +110,16 @@ augroup END
 cnoreabbrev W w
 cnoreabbrev Q q
 
+if has('nvim')
+  set inccommand=nosplit
+endif
+
 augroup vimrcEx
   autocmd!
 
-  autocmd TermOpen * setlocal statusline=%{b:term_title}
+  if has('nvim')
+    autocmd TermOpen * setlocal statusline=%{b:term_title}
+  endif
   " When editing a file, always jump to the last known cursor position.
   " Don't do it for commit messages, when the position is invalid, or when
   " inside an event handler (happens when dropping a file on gvim).
@@ -137,6 +143,8 @@ augroup vimrcEx
   autocmd FileType ruby,elixir,eelixir,slim setlocal number
 
   autocmd FileType liquid setlocal iskeyword+=-
+
+  autocmd FileType elm setlocal colorcolumn=80
 augroup END
 
 augroup VIMRC
@@ -172,22 +180,9 @@ if has("virtualedit")
   set virtualedit=block
 endif
 
-" Gui MacVim
-if has("gui_vimr")
-  set background=light
-  color one
-  set linespace=2
-  set guioptions-=T " Removes top toolbar
-  set guioptions-=r " Removes right hand scroll bar
-  set go-=L " Removes left hand scroll bar
-
-  " highlight CursorLine   cterm=NONE ctermbg=darkred ctermfg=white guibg=darkred guifg=NONE
-else " no gui
-  " color gruvbox
-  set background=light
-  color solarized8_light_flat
-endif
-
+" color gruvbox
+set background=dark
+color solarized8_dark_flat
 
 " Display extra whitespace
 set list listchars=tab:»·,trail:.,nbsp:·
@@ -212,7 +207,6 @@ let g:netrw_preview = 1
 let g:netrw_hide = 1
 let g:netrw_altv = 1
 let g:netrw_browse_split = 0
-" let g:netrw_liststyle = 1
 
 " Treat <li> and <p> tags like the block tags they are
 let g:html_indent_tags = 'li\|p'
@@ -220,8 +214,6 @@ let g:html_indent_tags = 'li\|p'
 " Open new split panes to right and bottom, which feels more natural
 set splitbelow
 set splitright
-
-set inccommand=nosplit
 
 " Remove slipt separator vertical bar
 " set fillchars=fold:-
